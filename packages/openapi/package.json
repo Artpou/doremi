@@ -1,0 +1,14 @@
+{
+  "name": "@repo/openapi",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./api.ts"
+  },
+  "scripts": {
+    "generate": "openapi-typescript http://localhost:5002/api-json -o ./api.ts"
+  },
+  "dependencies": {
+    "openapi-typescript": "^7.4.4"
+  }
+}

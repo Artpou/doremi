@@ -1,0 +1,40 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@next/bundle-analyzer": "^15.0.4",
+    "@repo/ui": "workspace:*",
+    "@tanstack/react-query": "^5.62.3",
+    "jwt-decode": "^4.0.0",
+    "next": "15.0.4",
+    "next-auth": "5.0.0-beta.25",
+    "openapi-fetch": "^0.13.3",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "react-hook-form": "^7.54.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/openapi": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "ts-patch": "^3.3.0",
+    "typescript": "catalog:"
+  }
+}

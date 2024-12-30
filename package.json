@@ -1,0 +1,30 @@
+{
+  "name": "turborepo-basic-shared",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm turbo run build",
+    "dev": "pnpm turbo run dev --parallel",
+    "lint": "pnpm turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate-schema": "pnpm turbo run generate-schema --filter=server"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^18.11.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.1.0",
+    "prettier": "^3.0.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@9.14.4",
+  "trustedDependencies": [
+    "@nestjs/core"
+  ]
+}
