@@ -2,35 +2,35 @@ import type { DrizzleDB } from 'src/drizzle/types/drizzle';
 
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import * as schema from '@db/schema';
-import { eq } from 'drizzle-orm';
+import { users } from '@db/schema';
+import { eq, InferSelectModel } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { RegisterDto } from 'src/auth/auth.dto';
 import { DatabaseError } from 'pg';
 
 @Injectable()
 export class UserService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
-  async create(dto: RegisterDto) {
+  async create(dto: Partial<InferSelectModel<typeof users>>) {
     try {
-      const users = await this.db
-        .insert(schema.users)
+      const [user] = await this.db
+        .insert(users)
         .values({
           ...dto,
-          password: await hash(dto.password, 10),
+          email: dto.email!,
+          password: dto.password ? await hash(dto.password, 10) : undefined,
         })
         .returning({
-          id: schema.users.id,
-          email: schema.users.email,
-          name: schema.users.name,
+          id: users.id,
+          email: users.email,
+          name: users.name,
         });
 
-      if (!users[0]) {
+      if (!user) {
         throw new Error('User creation failed');
       }
 
-      return users[0];
+      return user;
     } catch (error) {
       if (error instanceof DatabaseError && error.code === '23505') {
         throw new ConflictException('email duplicated');
@@ -40,10 +40,14 @@ export class UserService {
     }
   }
 
+  async update(id: number, dto: Partial<InferSelectModel<typeof users>>) {
+    return await this.db.update(users).set(dto).where(eq(users.id, id));
+  }
+
   async exist(id: number): Promise<number | undefined> {
     const user = await this.db.query.users.findFirst({
       columns: { id: true },
-      where: eq(schema.users.id, id),
+      where: eq(users.id, id),
     });
 
     return user?.id;
@@ -51,13 +55,13 @@ export class UserService {
 
   async findByEmail(email: string) {
     return await this.db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(users.email, email),
     });
   }
 
   async findById(id: number) {
     return await this.db.query.users.findFirst({
-      where: eq(schema.users.id, id),
+      where: eq(users.id, id),
     });
   }
 }

@@ -22,5 +22,14 @@
   "remoteCache": {
     "signature": true
   },
-  "globalEnv": ["NODE_ENV", "JWT_SECRET", "JWT_REFRESH_SECRET", "ANALYZE", "AUTH_SECRET"]
+  "globalEnv": [
+    "NODE_ENV",
+    "JWT_SECRET",
+    "JWT_REFRESH_SECRET",
+    "REDIS_URL",
+    "ANALYZE",
+    "AUTH_SECRET",
+    "SPOTIFY_CLIENT_ID",
+    "SPOTIFY_CLIENT_SECRET"
+  ]
 }

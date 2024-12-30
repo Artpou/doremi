@@ -8,3 +8,9 @@ export async function signInAction(
 ): Promise<ReturnType<typeof signIn>> {
   return await signIn("credentials", { email, password, redirect: false });
 }
+
+export async function signInSpotifyAction(): Promise<
+  ReturnType<typeof signIn>
+> {
+  return await signIn("spotify", { redirect: false });
+}

@@ -1,0 +1,32 @@
+{
+  "common": {
+    "login": "Connexion",
+    "signup": "Inscription",
+    "logout": "Déconnexion",
+    "cancel": "Annuler",
+    "or": "ou",
+    "signIn": "Se connecter",
+    "signInWithSpotify": "Se connecter avec Spotify",
+    "loading": "Chargement...",
+    "search": "Recherche",
+    "artists": "Artistes",
+    "albums": "Albums",
+    "tracks": "Titres",
+    "no_results": "Aucun résultat"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Mot de passe",
+    "name": "Nom",
+    "signInWithSpotify": "Se connecter avec Spotify",
+    "passwordRequirements": "Le mot de passe doit contenir au moins 8 caractères",
+    "invalidCredentials": "Email ou mot de passe invalide"
+  },
+  "sidebar": {
+    "home": "Accueil",
+    "search": "Recherche",
+    "trending": "Tendances",
+    "settings": "Paramètres",
+    "profile": "Profil"
+  }
+}

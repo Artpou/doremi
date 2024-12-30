@@ -35,9 +35,9 @@ This boilerplate combines the best of both worlds: Next.js's amazing developer e
 
 - `server`: A [NestJS](https://nestjs.com/) server application providing the backend API.
 - `web`: A [Next.js](https://nextjs.org) web application.
-- `@repo/ui`: A stub React component library used by `web`.
-- `@repo/openapi`: OpenAPI schema and generated API client used by the web application.
-- `@repo/*-config`: Shared configurations for ESLint, TypeScript, etc.
+- `@workspace/ui`: A stub React component library used by `web`.
+- `@workspace/openapi`: OpenAPI schema and generated API client used by the web application.
+- `@workspace/*-config`: Shared configurations for ESLint, TypeScript, etc.
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

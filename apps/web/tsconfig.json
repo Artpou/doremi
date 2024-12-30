@@ -1,10 +1,11 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@workspace/typescript-config/nextjs.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "@public/*": ["./public/*"]
+      "@public/*": ["./public/*"],
+      "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"]

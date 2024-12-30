@@ -1,5 +1,5 @@
 {
-  "name": "@repo/openapi",
+  "name": "@workspace/openapi",
   "version": "0.0.0",
   "private": true,
   "exports": {

@@ -1,5 +1,5 @@
 import createClient, { Middleware } from "openapi-fetch";
-import { paths } from "@repo/openapi";
+import { paths } from "@workspace/openapi";
 import { Session } from "next-auth";
 
 export type { Middleware };
@@ -12,7 +12,7 @@ export const authMiddleware = (
 
     if (session) {
       // @ts-expect-error session is not typed
-      request.headers.set("Authorization", `Bearer ${session.accessToken}`);
+      request.headers.set("Authorization", `Bearer ${session.access_token}`);
     }
   },
 });

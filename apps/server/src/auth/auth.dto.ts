@@ -23,9 +23,19 @@ export class RefreshDto extends createZodDto(
 
 export class TokenResponse extends createZodDto(
   z.object({
-    token: z.string(),
-    refreshToken: z.string(),
-    expiresIn: z.number(),
+    access_token: z.string(),
+    refresh_token: z.string(),
+    expires_in: z.number(),
     email: z.string().email(),
+    provider: z.string().optional(),
+  }),
+) {}
+
+export class SpotifyAuthDto extends createZodDto(
+  z.object({
+    email: z.string().email(),
+    id: z.string(),
+    access_token: z.string(),
+    refresh_token: z.string(),
   }),
 ) {}

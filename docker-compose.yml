@@ -2,15 +2,26 @@ version: "3.8"
 
 services:
   postgres:
+    container_name: db
     image: postgres:15
     environment:
-      - POSTGRES_DB=musicbox
+      - POSTGRES_DB=nextjs-nestjs-boilerplate
       - POSTGRES_USER=developer
       - POSTGRES_PASSWORD=test
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  redis:
+    container_name: cache
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
 
 volumes:
   postgres_data:
+  redis:
+    driver: local
+

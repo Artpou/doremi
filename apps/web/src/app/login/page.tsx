@@ -6,10 +6,14 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "@repo/ui/components/button";
-import { Input, InputWrapper } from "@repo/ui/components/input";
+import { Button } from "@workspace/ui/components/button";
+import { Card } from "@workspace/ui/components/card";
+import { Alert, AlertTitle } from "@workspace/ui/components/alert";
+import { Input, InputWrapper } from "@workspace/ui/components/input";
+import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
-import { signInAction } from "@/actions";
+import SpotifyIcon from "@/components/Icons/SpotifyIcon";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -21,6 +25,7 @@ const LoginSchema = z.object({
 type LoginType = z.infer<typeof LoginSchema>;
 
 const LoginPage = () => {
+  const t = useTranslations();
   const router = useRouter();
 
   const {
@@ -32,11 +37,15 @@ const LoginPage = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const { mutate: signIn, isPending } = useMutation({
+  const { mutate: login, isPending } = useMutation({
     mutationFn: async (data: LoginType) => {
-      const { error } = await signInAction(data.email, data.password);
+      const response = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-      if (error) throw error;
+      if (response?.error) throw new Error();
     },
     onSuccess: () => {
       router.push("/");
@@ -48,45 +57,53 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (data: LoginType): Promise<undefined> => {
-    signIn(data);
+    login(data);
   };
 
   return (
-    <div className="container flex flex-col items-center gap-4">
-      <form
-        className="flex w-full max-w-md flex-col items-center justify-center gap-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {!!errors.root && (
-          <div className="alert alert-error w-full p-3">
-            {errors.root.message}
+    <div className="flex h-full flex-col items-center justify-center">
+      <Card className="flex w-fit min-w-96 flex-col items-center justify-center gap-4 p-6">
+        <Button
+          onClick={() => signIn("spotify", { redirectTo: "/" })}
+          className="w-full max-w-md"
+        >
+          <SpotifyIcon />
+          {t("common.signInWithSpotify")}
+        </Button>
+        <div className="my-4 w-full max-w-md text-center">{t("common.or")}</div>
+        <form
+          className="flex w-full max-w-md flex-col items-center justify-center gap-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {!!errors.root && (
+            <Alert variant="destructive">
+              <AlertTitle>{errors.root.message}</AlertTitle>
+            </Alert>
+          )}
+          <InputWrapper
+            className="w-full"
+            label="Email"
+            error={errors.email?.message}
+          >
+            <Input type="email" {...register("email")} />
+          </InputWrapper>
+          <InputWrapper
+            className="w-full"
+            label="Password"
+            error={errors.password?.message}
+          >
+            <Input type="password" {...register("password")} />
+          </InputWrapper>
+          <div className="flex items-center justify-center gap-4">
+            <Button variant="secondary" asChild>
+              <Link href="/">{t("common.cancel")}</Link>
+            </Button>
+            <Button type="submit" isLoading={isPending}>
+              {t("common.signIn")}
+            </Button>
           </div>
-        )}
-        <InputWrapper
-          className="w-full"
-          label="Email"
-          error={errors.email?.message}
-        >
-          <Input type="email" {...register("email")} />
-        </InputWrapper>
-
-        <InputWrapper
-          className="w-full"
-          label="Password"
-          error={errors.password?.message}
-        >
-          <Input type="password" {...register("password")} />
-        </InputWrapper>
-
-        <div className="flex items-center justify-center gap-4">
-          <Button className="btn-primary" type="submit" isLoading={isPending}>
-            Sign In
-          </Button>
-          <Link className="btn" href="/">
-            Cancel
-          </Link>
-        </div>
-      </form>
+        </form>
+      </Card>
     </div>
   );
 };
