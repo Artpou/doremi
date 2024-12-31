@@ -19,8 +19,10 @@
     "@workspace/ui": "workspace:*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "catalog:",
     "jwt-decode": "^4.0.0",
     "lucide-react": "catalog:",
+    "ms": "catalog:",
     "next": "15.0.4",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^3.26.3",
@@ -30,10 +32,10 @@
     "react-hook-form": "^7.54.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "framer-motion": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@types/ms": "^0.7.34",
     "@types/node": "catalog:",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",

@@ -6,17 +6,17 @@ import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 
 interface SearchResultItemProps {
-  id: string;
+  id: number;
   name: string;
   image?: string;
   artists?: {
+    id: number;
     name: string;
-    id: string;
   }[];
-  release_date?: string;
+  release_date: number | null;
 }
 
-export const CardItem = ({
+export const ItemCard = ({
   id,
   name,
   image,
@@ -37,13 +37,13 @@ export const CardItem = ({
           <Image
             src={image}
             alt={name}
-            className="rounded-full object-cover"
-            height={40}
-            width={40}
+            className="rounded-sm object-cover"
+            height={48}
+            width={48}
           />
         )}
         <div>
-          <h3 className="font-medium">{name}</h3>
+          <h3 className="line-clamp-2 font-medium">{name}</h3>
           <span className="text-sm text-muted-foreground">
             {artists?.map((artist, index) => (
               <span key={artist.id}>

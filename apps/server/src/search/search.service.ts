@@ -1,8 +1,8 @@
-import type { SearchQueryDto, SearchResponse } from './search.dto';
-
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthenticatedRequest } from 'src/auth/auth';
 import { SpotifyService } from 'src/spotify/spotify.service';
+
+import { SearchQueryDto, SearchResponse } from './search.dto';
 
 @Injectable()
 export class SearchService {

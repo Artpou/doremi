@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/user/top": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UserController_getTop"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/auth/register": {
         parameters: {
             query?: never;
@@ -132,14 +116,206 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/search/releases": {
+    "/me/top": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["SearchController_getReleases"];
+        get: operations["MeController_getTop"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/releases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MeController_getReleases"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReviewController_list"];
+        put?: never;
+        post: operations["ReviewController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReviewController_get"];
+        put: operations["ReviewController_update"];
+        post?: never;
+        delete: operations["ReviewController_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AlbumController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AlbumController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums/{id}/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AlbumController_reviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/albums/{id}/tracks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AlbumController_tracks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tracks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TrackController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tracks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TrackController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tracks/{id}/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TrackController_reviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/artists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ArtistController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/artists/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ArtistController_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -152,88 +328,6 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        TrackDto: {
-            items: {
-                id: string;
-                name: string;
-                type: string;
-                uri: string;
-                artists: {
-                    id: string;
-                    name: string;
-                    type: string;
-                    uri: string;
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
-                    };
-                    followers?: {
-                        total: number;
-                    };
-                    genres?: string[];
-                    images?: {
-                        /** Format: uri */
-                        url: string;
-                        height: number | null;
-                        width: number | null;
-                    }[];
-                    popularity?: number;
-                }[];
-                album: {
-                    id: string;
-                    name: string;
-                    type: string;
-                    uri: string;
-                    album_type: string;
-                    artists: {
-                        id: string;
-                        name: string;
-                        type: string;
-                        uri: string;
-                        external_urls: {
-                            /** Format: uri */
-                            spotify: string;
-                        };
-                        followers?: {
-                            total: number;
-                        };
-                        genres?: string[];
-                        images?: {
-                            /** Format: uri */
-                            url: string;
-                            height: number | null;
-                            width: number | null;
-                        }[];
-                        popularity?: number;
-                    }[];
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
-                    };
-                    images: {
-                        /** Format: uri */
-                        url: string;
-                        height: number | null;
-                        width: number | null;
-                    }[];
-                    release_date: string;
-                    total_tracks: number;
-                };
-                duration_ms: number;
-                explicit: boolean;
-                external_urls: {
-                    /** Format: uri */
-                    spotify: string;
-                };
-                preview_url: string | null;
-                popularity?: number;
-            }[];
-            total: number;
-            limit: number;
-            offset: number;
-            next: string | null;
-            previous: string | null;
-        };
         RegisterDto: {
             /** Format: email */
             email: string;
@@ -263,212 +357,130 @@ export interface components {
             refresh: string;
         };
         SearchResponse: {
-            tracks?: {
-                items: {
-                    id: string;
-                    name: string;
-                    type: string;
-                    uri: string;
-                    artists: {
-                        id: string;
+            albums: {
+                id: number;
+                title: string;
+                image: string | null;
+                releaseYear: number | null;
+                spotifyId: string | null;
+                appleId: string | null;
+                createdAt: unknown;
+                updatedAt: unknown;
+                artists: {
+                    artist: {
+                        id: number;
                         name: string;
-                        type: string;
-                        uri: string;
-                        external_urls: {
-                            /** Format: uri */
-                            spotify: string;
-                        };
-                        followers?: {
-                            total: number;
-                        };
-                        genres?: string[];
-                        images?: {
-                            /** Format: uri */
-                            url: string;
-                            height: number | null;
-                            width: number | null;
-                        }[];
-                        popularity?: number;
-                    }[];
-                    album: {
-                        id: string;
-                        name: string;
-                        type: string;
-                        uri: string;
-                        album_type: string;
-                        artists: {
-                            id: string;
-                            name: string;
-                            type: string;
-                            uri: string;
-                            external_urls: {
-                                /** Format: uri */
-                                spotify: string;
-                            };
-                            followers?: {
-                                total: number;
-                            };
-                            genres?: string[];
-                            images?: {
-                                /** Format: uri */
-                                url: string;
-                                height: number | null;
-                                width: number | null;
-                            }[];
-                            popularity?: number;
-                        }[];
-                        external_urls: {
-                            /** Format: uri */
-                            spotify: string;
-                        };
-                        images: {
-                            /** Format: uri */
-                            url: string;
-                            height: number | null;
-                            width: number | null;
-                        }[];
-                        release_date: string;
-                        total_tracks: number;
+                        image: string | null;
+                        bio: string | null;
+                        spotifyId: string | null;
+                        appleId: string | null;
+                        createdAt: unknown;
+                        updatedAt: unknown;
                     };
-                    duration_ms: number;
-                    explicit: boolean;
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
-                    };
-                    preview_url: string | null;
-                    popularity?: number;
                 }[];
-                total: number;
-                limit: number;
-                offset: number;
-                next: string | null;
-                previous: string | null;
-            };
-            artists?: {
-                items: {
-                    id: string;
+            }[] | null;
+        };
+        AlbumWithRelationsResponse: {
+            id: number;
+            title: string;
+            image: string | null;
+            releaseYear: number | null;
+            spotifyId: string | null;
+            appleId: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+            artists: {
+                artist: {
+                    id: number;
                     name: string;
-                    type: string;
-                    uri: string;
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
-                    };
-                    followers?: {
-                        total: number;
-                    };
-                    genres?: string[];
-                    images?: {
-                        /** Format: uri */
-                        url: string;
-                        height: number | null;
-                        width: number | null;
-                    }[];
-                    popularity?: number;
-                }[];
-                total: number;
-                limit: number;
-                offset: number;
-                next: string | null;
-                previous: string | null;
-            };
-            albums?: {
-                items: {
-                    id: string;
-                    name: string;
-                    type: string;
-                    uri: string;
-                    album_type: string;
-                    artists: {
-                        id: string;
+                    image: string | null;
+                    bio: string | null;
+                    spotifyId: string | null;
+                    appleId: string | null;
+                    createdAt: unknown;
+                    updatedAt: unknown;
+                };
+            }[];
+        };
+        ReviewWithRelationsResponse: {
+            id: number;
+            note: number;
+            comment: string | null;
+            creatorId: number;
+            albumId: number | null;
+            trackId: number | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+            album: {
+                id: number;
+                title: string;
+                image: string | null;
+                releaseYear: number | null;
+                spotifyId: string | null;
+                appleId: string | null;
+                createdAt: unknown;
+                updatedAt: unknown;
+                artists: {
+                    artist: {
+                        id: number;
                         name: string;
-                        type: string;
-                        uri: string;
-                        external_urls: {
-                            /** Format: uri */
-                            spotify: string;
-                        };
-                        followers?: {
-                            total: number;
-                        };
-                        genres?: string[];
-                        images?: {
-                            /** Format: uri */
-                            url: string;
-                            height: number | null;
-                            width: number | null;
-                        }[];
-                        popularity?: number;
-                    }[];
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
+                        image: string | null;
+                        bio: string | null;
+                        spotifyId: string | null;
+                        appleId: string | null;
+                        createdAt: unknown;
+                        updatedAt: unknown;
                     };
-                    images: {
-                        /** Format: uri */
-                        url: string;
-                        height: number | null;
-                        width: number | null;
-                    }[];
-                    release_date: string;
-                    total_tracks: number;
                 }[];
-                total: number;
-                limit: number;
-                offset: number;
-                next: string | null;
-                previous: string | null;
+            } | null;
+            creator: {
+                id: number;
+                name: string | null;
             };
         };
-        NewReleasesDto: {
-            albums: {
-                items: {
-                    id: string;
-                    name: string;
-                    type: string;
-                    uri: string;
-                    album_type: string;
-                    artists: {
-                        id: string;
-                        name: string;
-                        type: string;
-                        uri: string;
-                        external_urls: {
-                            /** Format: uri */
-                            spotify: string;
-                        };
-                        followers?: {
-                            total: number;
-                        };
-                        genres?: string[];
-                        images?: {
-                            /** Format: uri */
-                            url: string;
-                            height: number | null;
-                            width: number | null;
-                        }[];
-                        popularity?: number;
-                    }[];
-                    external_urls: {
-                        /** Format: uri */
-                        spotify: string;
-                    };
-                    images: {
-                        /** Format: uri */
-                        url: string;
-                        height: number | null;
-                        width: number | null;
-                    }[];
-                    release_date: string;
-                    total_tracks: number;
-                }[];
-                total: number;
-                limit: number;
-                offset: number;
-                next: string | null;
-                previous: string | null;
-            };
+        ReviewResponse: {
+            id: number;
+            note: number;
+            comment: string | null;
+            creatorId: number;
+            albumId: number | null;
+            trackId: number | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        CreateReviewDto: {
+            comment: string;
+            note: number;
+        };
+        AlbumResponse: {
+            id: number;
+            title: string;
+            image: string | null;
+            releaseYear: number | null;
+            spotifyId: string | null;
+            appleId: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        TrackResponse: {
+            id: number;
+            title: string;
+            duration: number;
+            albumId: number | null;
+            spotifyId: string | null;
+            appleId: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        ArtistResponse: {
+            id: number;
+            name: string;
+            image: string | null;
+            bio: string | null;
+            spotifyId: string | null;
+            appleId: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
         };
     };
     responses: never;
@@ -479,25 +491,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    UserController_getTop: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrackDto"];
-                };
-            };
-        };
-    };
     AuthController_register: {
         parameters: {
             query?: never;
@@ -646,7 +639,24 @@ export interface operations {
             };
         };
     };
-    SearchController_getReleases: {
+    MeController_getTop: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MeController_getReleases: {
         parameters: {
             query?: never;
             header?: never;
@@ -660,7 +670,299 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["NewReleasesDto"];
+                    "application/json": components["schemas"]["AlbumWithRelationsResponse"][];
+                };
+            };
+        };
+    };
+    ReviewController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewWithRelationsResponse"][];
+                };
+            };
+        };
+    };
+    ReviewController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateReviewDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"];
+                };
+            };
+        };
+    };
+    ReviewController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"];
+                };
+            };
+        };
+    };
+    ReviewController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateReviewDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"];
+                };
+            };
+        };
+    };
+    ReviewController_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"];
+                };
+            };
+        };
+    };
+    AlbumController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumResponse"][];
+                };
+            };
+        };
+    };
+    AlbumController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlbumResponse"];
+                };
+            };
+        };
+    };
+    AlbumController_reviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"][];
+                };
+            };
+        };
+    };
+    AlbumController_tracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackResponse"][];
+                };
+            };
+        };
+    };
+    TrackController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackResponse"][];
+                };
+            };
+        };
+    };
+    TrackController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackResponse"];
+                };
+            };
+        };
+    };
+    TrackController_reviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResponse"][];
+                };
+            };
+        };
+    };
+    ArtistController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArtistResponse"][];
+                };
+            };
+        };
+    };
+    ArtistController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArtistResponse"];
                 };
             };
         };

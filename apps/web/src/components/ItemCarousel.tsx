@@ -93,7 +93,7 @@ const GradientEdges = () => {
   );
 };
 
-export const CarouselItem = ({ items }: { items: CarouselItemData[] }) => {
+export const ItemCarousel = ({ items }: { items: CarouselItemData[] }) => {
   const [imgIndex, setImgIndex] = useState(0);
   const dragX = useMotionValue(0);
 

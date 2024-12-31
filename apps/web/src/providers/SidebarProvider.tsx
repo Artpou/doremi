@@ -1,7 +1,4 @@
-import {
-  SidebarProvider,
-  SidebarTrigger,
-} from "@workspace/ui/components/sidebar";
+import { SidebarProvider } from "@workspace/ui/components/sidebar";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
 import { AppSidebar } from "@/components/AppSidebar";
@@ -22,8 +19,7 @@ export default async function Layout({
       <AppTopbar />
       <AppSidebar />
       <ScrollArea className="w-full">
-        <main className="container mx-auto flex max-h-screen grow flex-col items-center p-4 pt-20">
-          <SidebarTrigger />
+        <main className="container mx-auto flex max-h-screen grow flex-col items-center pt-14 sm:p-4 sm:pt-20">
           {children}
         </main>
       </ScrollArea>

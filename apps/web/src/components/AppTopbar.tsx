@@ -1,14 +1,15 @@
-"use client";
+'use client';
 
-import { Topbar } from "@workspace/ui/components/topbar";
-import { UserPlus } from "lucide-react";
-import { Button } from "@workspace/ui/components/button";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { Topbar } from '@workspace/ui/components/topbar';
+import { UserPlus } from 'lucide-react';
+import { Button } from '@workspace/ui/components/button';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { SidebarTrigger } from '@workspace/ui/components/sidebar';
 
-import { Search } from "./Search";
+import { Search } from './Search';
 
-import favicon from "@/app/favicon.ico";
+import favicon from '@/app/favicon.ico';
 
 export function AppTopbar() {
   const router = useRouter();
@@ -18,9 +19,11 @@ export function AppTopbar() {
       <Image
         src={favicon}
         alt="favicon"
-        className="size-8 cursor-pointer rounded-sm"
-        onClick={() => router.push("/")}
+        className="size-0 cursor-pointer rounded-sm sm:size-8"
+        onClick={() => router.push('/')}
       />
+      <SidebarTrigger />
+
       <Search />
       <Button variant="secondary" size="icon">
         <UserPlus />

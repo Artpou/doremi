@@ -5,7 +5,7 @@ services:
     container_name: db
     image: postgres:15
     environment:
-      - POSTGRES_DB=nextjs-nestjs-boilerplate
+      - POSTGRES_DB=doremi
       - POSTGRES_USER=developer
       - POSTGRES_PASSWORD=test
     volumes:

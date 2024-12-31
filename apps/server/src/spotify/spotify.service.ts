@@ -1,9 +1,14 @@
+import type {
+  NewReleases,
+  PartialSearchResult,
+  SimplifiedAlbum,
+  Tracks,
+} from 'types/spotify';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { SearchQueryDto } from 'src/search/search.dto';
-
-import { NewReleases, SearchResults, TrackResults } from './spotify.dto';
-
+import { AlbumWithRelationsResponse } from 'src/album/album.dto';
 @Injectable()
 export class SpotifyService {
   private readonly logger = new Logger(SpotifyService.name);
@@ -30,6 +35,31 @@ export class SpotifyService {
     return data;
   }
 
+  private convertAlbum(album: SimplifiedAlbum): AlbumWithRelationsResponse {
+    return {
+      id: 0,
+      title: album.name,
+      image: album.images[0]?.url ?? null,
+      releaseYear: new Date(album.release_date).getFullYear(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      spotifyId: album.id,
+      appleId: null,
+      artists: album.artists.map((artist) => ({
+        artist: {
+          id: 0,
+          name: artist.name,
+          bio: null,
+          image: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          spotifyId: artist.id,
+          appleId: null,
+        },
+      })),
+    };
+  }
+
   async refreshToken(
     refreshToken: string,
   ): Promise<{ access_token: string; refresh_token: string }> {
@@ -53,7 +83,7 @@ export class SpotifyService {
   }
 
   async search(accessToken: string, { search, type }: SearchQueryDto) {
-    return this.spotifyRequest<SearchResults>(
+    const { albums } = await this.spotifyRequest<PartialSearchResult>(
       `/search?${new URLSearchParams({
         q: search,
         type,
@@ -61,19 +91,27 @@ export class SpotifyService {
       }).toString()}`,
       accessToken,
     );
+
+    return {
+      albums: albums?.items.map(this.convertAlbum) ?? [],
+    };
   }
 
   async userTop(accessToken: string, type: 'tracks' | 'artists') {
-    return this.spotifyRequest<TrackResults>(
+    const result = await this.spotifyRequest<Tracks>(
       `/me/top/${type}?time_range=short_term`,
       accessToken,
     );
+
+    return [];
   }
 
   async newReleases(accessToken: string) {
-    return this.spotifyRequest<NewReleases>(
+    const result = await this.spotifyRequest<NewReleases>(
       `/browse/new-releases?limit=20`,
       accessToken,
     );
+
+    return result.albums.items.map(this.convertAlbum);
   }
 }

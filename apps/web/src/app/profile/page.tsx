@@ -13,12 +13,9 @@ import {
 
 import { auth } from "@/auth";
 import { GET } from "@/app/api/client";
-import { CardItem } from "@/components/CardItem";
 
 export default async function Profile() {
   const session = await auth();
-  const t = await getTranslations("common");
-  const { data } = await GET("/user/top");
 
   if (!session?.user) return null;
 
@@ -29,7 +26,7 @@ export default async function Profile() {
     .toUpperCase();
 
   return (
-    <section className="container mx-auto py-8">
+    <section className="container mx-auto sm:py-8">
       <div className="grid gap-8">
         <Card className="w-full">
           <CardHeader>
@@ -56,18 +53,19 @@ export default async function Profile() {
             <CardTitle>Your Top Tracks</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col gap-4">
-              {data?.items?.map(({ album, name, id }) => (
-                <CardItem
+            {/* // TODO: Add top tracks */}
+            {/* <div className="flex flex-col gap-4">
+              {(data || []).map(({ album, name, id }) => (
+                <ItemCard
                   key={id}
                   id={id}
                   name={name}
-                  image={album.images[0]?.url}
+                  image={album.image}
                   artists={album.artists}
                   release_date={album.release_date}
                 />
               ))}
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>

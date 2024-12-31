@@ -9,13 +9,14 @@ import { SearchIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Loading } from "@workspace/ui/components/loading";
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import ms from "ms";
 
-import { CardItem } from "./CardItem";
+import { ItemCard } from "./ItemCard";
 
 import useAPI from "@/hooks/useAPI";
 
-const DEBOUNCE_TIME = 1000;
-const STALE_TIME = 1000 * 60 * 5;
+const DEBOUNCE_TIME = ms("1s");
+const STALE_TIME = ms("1m");
 
 export const Search = () => {
   const t = useTranslations();
@@ -25,8 +26,6 @@ export const Search = () => {
   const debouncedSearch = useDebounce(search, DEBOUNCE_TIME);
   const { GET } = useAPI();
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const shouldShowResults = search.length > 2;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,22 +44,22 @@ export const Search = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["search", debouncedSearch, type],
     queryFn: async () => {
-      if (!debouncedSearch) return {};
-
       const { data } = await GET("/search", {
         params: {
           query: { search: debouncedSearch, type },
         },
       });
 
-      return data || {};
+      return data;
     },
-    enabled: shouldShowResults,
+    enabled: search.length > 2 && !!debouncedSearch,
     staleTime: STALE_TIME,
   });
 
-  const items =
-    data?.tracks?.items || data?.artists?.items || data?.albums?.items || [];
+  const shouldShowResults =
+    search.length > 2 && !isLoading && !!debouncedSearch;
+
+  const items = data?.albums || [];
 
   return (
     <div className="mx-auto w-full max-w-xl" ref={containerRef}>
@@ -79,15 +78,15 @@ export const Search = () => {
         />
 
         {open && (
-          <div className="absolute inset-x-0 top-full z-50 mt-1 gap-2 overflow-hidden rounded-md border bg-popover shadow-md">
+          <div className="fixed inset-x-0 z-50 mt-2 items-center gap-2 overflow-hidden rounded-md border bg-popover shadow-md sm:absolute sm:top-full sm:mt-1">
             <Tabs
-              className="w-full"
+              className="relative w-full"
               value={type}
               onValueChange={(value) =>
                 setType(value as "artist" | "album" | "track")
               }
             >
-              <TabsList className="w-full">
+              <TabsList className="w-full rounded-none">
                 <TabsTrigger className="w-full" value="album">
                   {t("common.albums")}
                 </TabsTrigger>
@@ -100,32 +99,28 @@ export const Search = () => {
               </TabsList>
             </Tabs>
             <ScrollArea>
-              <div className="max-h-[300px] min-h-32">
-                {!shouldShowResults && <></>}
-                {shouldShowResults && isLoading && (
-                  <div className="flex items-center justify-center gap-2 p-4 text-muted-foreground">
+              <div className="max-h-[320px] sm:min-h-32">
+                {isLoading && (
+                  <div className="flex h-full items-center justify-center gap-2 p-4 text-muted-foreground sm:min-h-32">
                     <Loading />
                     <span>{t("common.loading")}</span>
                   </div>
                 )}
-                {shouldShowResults && !isLoading && items?.length === 0 && (
+                {shouldShowResults && items?.length === 0 && (
                   <div className="p-4 text-center text-muted-foreground">
                     {t("common.no_results")}
                   </div>
                 )}
                 {shouldShowResults &&
-                  !isLoading &&
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  items?.map((item: any) => (
-                    <CardItem
-                      key={item.id}
-                      id={item.id}
-                      name={item.name}
-                      image={
-                        item.images?.[0]?.url || item.album?.images?.[0]?.url
-                      }
-                      artists={item.artists}
-                      release_date={item.release_date}
+                  items?.length > 0 &&
+                  items?.map((item, idx) => (
+                    <ItemCard
+                      key={idx}
+                      id={idx}
+                      name={item.title}
+                      image={item.image ?? undefined}
+                      artists={item.artists.map((artist) => artist.artist)}
+                      release_date={item.releaseYear?.toString()}
                     />
                   ))}
               </div>

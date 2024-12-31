@@ -2,16 +2,17 @@ import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
 import { getTranslations } from "next-intl/server";
 import { BackgroundBeams } from "@workspace/ui/components/background-beams";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
 import { auth } from "@/auth";
 import { GET } from "@/app/api/client";
-import { CarouselItem } from "@/components/CarouselItem";
+import { ItemCarousel } from "@/components/ItemCarousel";
+import { Feed } from "@/components/Feed";
+import { ItemCard } from "@/components/ItemCard";
 
 export default async function Home() {
   const session = await auth();
   const t = await getTranslations("common");
-  const { data: releases } = await GET("/search/releases");
-  const { data: top } = await GET("/user/top");
 
   if (!session) {
     return (
@@ -29,36 +30,34 @@ export default async function Home() {
     );
   }
 
+  const { data: releases } = await GET("/me/releases");
+  const { data: top } = await GET("/me/top");
+
   return (
-    <div className="flex w-full gap-4 self-center">
-      <div className="flex w-full items-center justify-center rounded-lg bg-sidebar sm:w-2/3 lg:w-3/4 xl:w-4/5">
-        <span>WIP FEED</span>
+    <div className="flex size-full gap-4 self-center">
+      <div className="flex flex-col gap-2 sm:w-2/3 xl:w-3/4">
+        <Feed className="h-full" />
       </div>
-      <div className="hidden flex-col sm:flex sm:w-1/3 lg:w-1/4 xl:w-1/5">
-        <h2 className="text-2xl font-bold">New Releases</h2>
-        <CarouselItem
-          items={
-            releases
-              ? releases.albums.items.slice(0, 8).map((item) => ({
-                  imageUrl: item.images[0]?.url || "",
-                  title: item.name,
-                  artists: item.artists?.map((artist) => artist.name),
-                }))
-              : []
-          }
+      <div className="hidden flex-col sm:flex sm:w-1/3 xl:w-1/4 gap-4">
+        <ItemCarousel
+          items={(releases || []).slice(0, 8).map((item) => ({
+            imageUrl: item.image || "",
+            title: item.title || "",
+            artists: item.artists?.map((artist) => artist.artist.name),
+          }))}
         />
-        <h2 className="mt-2 text-2xl font-bold">Top Tracks</h2>
-        <CarouselItem
-          items={
-            top
-              ? top.items.slice(0, 8).map((item) => ({
-                  imageUrl: item.album.images[0]?.url || "",
-                  title: item.name,
-                  artists: item.artists?.map((artist) => artist.name),
-                }))
-              : []
-          }
-        />
+        <ScrollArea className="max-h-[300px] rounded-md border-border bg-card">
+          {(releases || []).map((item, idx) => (
+            <ItemCard
+              key={idx}
+              id={idx}
+              name={item.title}
+              image={item.image || ""}
+              artists={item.artists?.map(({ artist }) => artist)}
+              release_date={item.releaseYear}
+            />
+          ))}
+        </ScrollArea>
       </div>
     </div>
   );

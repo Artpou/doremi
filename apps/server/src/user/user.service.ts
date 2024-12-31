@@ -1,46 +1,34 @@
 import type { DrizzleDB } from 'src/drizzle/types/drizzle';
 
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { users } from '@db/schema';
-import { eq, InferSelectModel } from 'drizzle-orm';
+import { users } from 'db/schema';
+import { eq } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { DatabaseError } from 'pg';
+import { Model } from 'db/types';
 
 @Injectable()
 export class UserService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
-  async create(dto: Partial<InferSelectModel<typeof users>>) {
-    try {
-      const [user] = await this.db
-        .insert(users)
-        .values({
-          ...dto,
-          email: dto.email!,
-          password: dto.password ? await hash(dto.password, 10) : undefined,
-        })
-        .returning({
-          id: users.id,
-          email: users.email,
-          name: users.name,
-        });
+  async create(dto: Partial<Model<'users'>> & { email: string }) {
+    const [user] = await this.db
+      .insert(users)
+      .values({
+        ...dto,
+        password: dto.password ? await hash(dto.password, 10) : undefined,
+      })
+      .returning({
+        id: users.id,
+        email: users.email,
+        name: users.name,
+      });
 
-      if (!user) {
-        throw new Error('User creation failed');
-      }
-
-      return user;
-    } catch (error) {
-      if (error instanceof DatabaseError && error.code === '23505') {
-        throw new ConflictException('email duplicated');
-      }
-
-      throw error;
-    }
+    if (!user) throw new Error('User creation failed');
+    return user;
   }
 
-  async update(id: number, dto: Partial<InferSelectModel<typeof users>>) {
+  async update(id: number, dto: Partial<Model<'users'>>) {
     return await this.db.update(users).set(dto).where(eq(users.id, id));
   }
 

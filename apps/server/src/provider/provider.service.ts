@@ -1,7 +1,7 @@
 import type { DrizzleDB } from 'src/drizzle/types/drizzle';
 
 import { Inject, Injectable } from '@nestjs/common';
-import * as schema from '@db/schema';
+import * as schema from 'db/schema';
 import { eq, InferSelectModel } from 'drizzle-orm';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 

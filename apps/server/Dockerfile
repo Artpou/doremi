@@ -12,7 +12,7 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/turbo.json ./turbo.json
 RUN pnpm install --frozen-lockfile
-RUN pnpm drizzle generate
+RUN pnpm drizzle-kit generate
 
 FROM node:20-slim AS sourcer
 WORKDIR /app

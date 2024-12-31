@@ -3,9 +3,6 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./",
-    "plugins": [{ "name": "nestjs" }],
-    "paths": {
-      "@db/*": ["db/*"]
-    }
+    "plugins": [{ "name": "nestjs" }]
   }
 }

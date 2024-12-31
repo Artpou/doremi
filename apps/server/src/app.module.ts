@@ -10,12 +10,16 @@ import ms from 'ms';
 
 import { LoggerMiddleware } from './logger.middleware';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
 import { DrizzleModule } from './drizzle/drizzle.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { SearchModule } from './search/search.module';
 import { SpotifyModule } from './spotify/spotify.module';
 import { ProviderModule } from './provider/provider.module';
+import { MeModule } from './me/me.module';
+import { ReviewModule } from './review/review.module';
+import { AlbumModule } from './album/album.module';
+import { TrackModule } from './track/track.module';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
   imports: [
@@ -52,11 +56,15 @@ import { ProviderModule } from './provider/provider.module';
         limit: 3,
       },
     ]),
-    UserModule,
     AuthModule,
     SearchModule,
     SpotifyModule,
     ProviderModule,
+    MeModule,
+    ReviewModule,
+    AlbumModule,
+    TrackModule,
+    ArtistModule,
   ],
   providers: [
     {

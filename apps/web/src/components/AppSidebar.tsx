@@ -14,7 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import ButtonLogout from "./ButtonLogout";
+import LogoutButton from "./LogoutButton";
 
 import { siteConfig } from "@/config/site";
 
@@ -48,7 +48,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <ButtonLogout collapsed={!open} />
+        <LogoutButton collapsed={!open} />
       </SidebarFooter>
     </Sidebar>
   );

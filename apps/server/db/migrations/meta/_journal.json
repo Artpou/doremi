@@ -8,6 +8,20 @@
       "when": 1733147325304,
       "tag": "0000_chief_starbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735568180893,
+      "tag": "0001_wet_lenny_balinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735568358250,
+      "tag": "0002_square_cannonball",
+      "breakpoints": true
     }
   ]
 }

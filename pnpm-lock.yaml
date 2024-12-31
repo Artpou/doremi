@@ -18,6 +18,9 @@ catalogs:
     lucide-react:
       specifier: ^0.456.0
       version: 0.456.0
+    ms:
+      specifier: ^2.1.3
+      version: 2.1.3
     postcss:
       specifier: ^8
       version: 8.4.49
@@ -117,6 +120,9 @@ importers:
       drizzle-orm:
         specifier: ^0.36.4
         version: 0.36.4(@types/pg@8.11.10)(@types/react@19.0.1)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0)
+      drizzle-zod:
+        specifier: ^0.6.1
+        version: 0.6.1(drizzle-orm@0.36.4(@types/pg@8.11.10)(@types/react@19.0.1)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0))(zod@3.23.8)
       fastify:
         specifier: 4.28.1
         version: 4.28.1
@@ -124,7 +130,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       ms:
-        specifier: ^2.1.3
+        specifier: 'catalog:'
         version: 2.1.3
       nestjs-pino:
         specifier: ^4.1.0
@@ -262,6 +268,9 @@ importers:
       lucide-react:
         specifier: 'catalog:'
         version: 0.456.0(react@19.0.0)
+      ms:
+        specifier: 'catalog:'
+        version: 2.1.3
       next:
         specifier: 15.0.4
         version: 15.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -293,6 +302,9 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
+      '@types/ms':
+        specifier: ^0.7.34
+        version: 0.7.34
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.9
@@ -412,6 +424,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@tailwindcss/line-clamp':
+        specifier: ^0.4.4
+        version: 0.4.4(tailwindcss@3.4.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2)))
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -2289,6 +2304,11 @@ packages:
   '@swc/helpers@0.5.13':
     resolution: {integrity: sha512-UoKGxQ3r5kYI9dALKJapMmuK+1zWM/H17Z1+iwnNmzcJRnfFuevZs375TA5rW31pu4BS4NoSy1fRsexDXfWn5w==}
 
+  '@tailwindcss/line-clamp@0.4.4':
+    resolution: {integrity: sha512-5U6SY5z8N42VtrCrKlsTAA35gy2VSyYtHWCsg1H87NU1SXnEfekTVlrga9fzUDrrHcGi2Lb5KenUWb4lRQT5/g==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+
   '@tanstack/query-core@5.62.3':
     resolution: {integrity: sha512-Jp/nYoz8cnO7kqhOlSv8ke/0MJRJVGuZ0P/JO9KQ+f45mpN90hrerzavyTKeSoT/pOzeoOUkv1Xd0wPsxAWXfg==}
 
@@ -3436,6 +3456,12 @@ packages:
         optional: true
       sqlite3:
         optional: true
+
+  drizzle-zod@0.6.1:
+    resolution: {integrity: sha512-huEbUgnsuR8tupnmLiyB2F1I2H9dswI3GfM36IbIqx9i0YUeYjRsDpJVyFVeziUvI1ogT9JHRL2Q03cC4QmvxA==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: '>=3.0.0'
 
   dunder-proto@1.0.0:
     resolution: {integrity: sha512-9+Sj30DIu+4KvHqMfLUGLFYL2PkURSYMVXJyXe92nFRvlYq5hBjLEhblKB+vkd/WVlUYMWigiY07T91Fkk0+4A==}
@@ -8253,6 +8279,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@tailwindcss/line-clamp@0.4.4(tailwindcss@3.4.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2)))':
+    dependencies:
+      tailwindcss: 3.4.16(ts-node@10.9.2(@types/node@20.17.9)(typescript@5.7.2))
+
   '@tanstack/query-core@5.62.3': {}
 
   '@tanstack/react-query@5.62.3(react@19.0.0)':
@@ -9460,6 +9490,11 @@ snapshots:
       pg: 8.13.1
       postgres: 3.4.5
       react: 19.0.0
+
+  drizzle-zod@0.6.1(drizzle-orm@0.36.4(@types/pg@8.11.10)(@types/react@19.0.1)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0))(zod@3.23.8):
+    dependencies:
+      drizzle-orm: 0.36.4(@types/pg@8.11.10)(@types/react@19.0.1)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0)
+      zod: 3.23.8
 
   dunder-proto@1.0.0:
     dependencies:
