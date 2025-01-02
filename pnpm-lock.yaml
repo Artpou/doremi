@@ -280,6 +280,9 @@ importers:
       next-intl:
         specifier: ^3.26.3
         version: 3.26.3(next@15.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+      nuqs:
+        specifier: ^2.3.0
+        version: 2.3.0(next@15.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       openapi-fetch:
         specifier: ^0.13.3
         version: 0.13.3
@@ -301,6 +304,9 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.23.8
+      zustand:
+        specifier: ^5.0.2
+        version: 5.0.2(@types/react@19.0.1)(react@19.0.0)
     devDependencies:
       '@types/ms':
         specifier: ^0.7.34
@@ -4873,6 +4879,9 @@ packages:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
 
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
     hasBin: true
@@ -5063,6 +5072,24 @@ packages:
   npmlog@5.0.1:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
     deprecated: This package is no longer supported.
+
+  nuqs@2.3.0:
+    resolution: {integrity: sha512-ChS56bJZdaTQzCJb6jPel6cIHYh8/V/GSIjZoIe5yAssGdcrVaBFBgzHfJW6IewbR6yc1Zch2CmGsdgztR+xmA==}
+    peerDependencies:
+      '@remix-run/react': '>=2'
+      next: '>=14.2.0'
+      react: '>=18.2.0 || ^19.0.0-0'
+      react-router: ^7
+      react-router-dom: ^6 || ^7
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      next:
+        optional: true
+      react-router:
+        optional: true
+      react-router-dom:
+        optional: true
 
   oas-kit-common@1.0.8:
     resolution: {integrity: sha512-pJTS2+T0oGIwgjGpw7sIRU8RQMcUoKCDWFLdBqKB2BNmGpbBMH2sdqAaOXUg8OzonZHU0L7vfJu1mJFEiYDWOQ==}
@@ -6563,6 +6590,24 @@ packages:
 
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
+  zustand@5.0.2:
+    resolution: {integrity: sha512-8qNdnJVJlHlrKXi50LDqqUNmUbuBjoKLrYQBnoChIbVph7vni+sY+YpvdjXG9YLd/Bxr6scMcR+rm5H3aSqPaw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -11343,6 +11388,8 @@ snapshots:
       minipass: 3.3.6
       yallist: 4.0.0
 
+  mitt@3.0.1: {}
+
   mkdirp@0.5.6:
     dependencies:
       minimist: 1.2.8
@@ -11506,6 +11553,13 @@ snapshots:
       console-control-strings: 1.1.0
       gauge: 3.0.2
       set-blocking: 2.0.0
+
+  nuqs@2.3.0(next@15.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0):
+    dependencies:
+      mitt: 3.0.1
+      react: 19.0.0
+    optionalDependencies:
+      next: 15.0.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
 
   oas-kit-common@1.0.8:
     dependencies:
@@ -13166,3 +13220,8 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@3.23.8: {}
+
+  zustand@5.0.2(@types/react@19.0.1)(react@19.0.0):
+    optionalDependencies:
+      '@types/react': 19.0.1
+      react: 19.0.0

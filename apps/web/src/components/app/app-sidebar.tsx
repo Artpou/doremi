@@ -14,7 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../button/button-logout";
 
 import { siteConfig } from "@/config/site";
 

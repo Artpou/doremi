@@ -7,7 +7,6 @@ import { SpotifyService } from 'src/spotify/spotify.service';
 import { ProviderGuard } from 'src/provider/provider.guard';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import ms from 'ms';
-import { TrackResponse } from 'src/track/track.dto';
 import { AlbumWithRelationsResponse } from 'src/album/album.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 
@@ -20,24 +19,20 @@ export class MeController {
   ) {}
 
   @Get('top')
-  @UseGuards(JwtAuthGuard, ProviderGuard)
-  // @ApiOkResponse({ type: TrackDto })
-  async getTop(@Req() req: AuthenticatedRequest): Promise<TrackResponse[]> {
+  @ApiOkResponse({ type: [AlbumWithRelationsResponse] })
+  async getTop(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<AlbumWithRelationsResponse[]> {
     const user = req.user;
 
     const cachedData = await this.cacheService.get(`/${user.id}/top`);
-    if (cachedData) return cachedData as TrackResponse[];
+    if (cachedData) return cachedData as AlbumWithRelationsResponse[];
 
-    return [];
-
-    const data = await this.spotifyService.userTop(
-      req.provider!.access_token,
-      'tracks',
-    );
+    const data = await this.spotifyService.userTop(req.provider!.access_token);
 
     await this.cacheService.set(`/${user.id}/top`, data, ms('24h'));
 
-    // return data;
+    return data;
   }
 
   @Get('releases')

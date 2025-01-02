@@ -1,26 +1,13 @@
-"use client";
-import { useEffect } from "react";
-import { getSession } from "next-auth/react";
+import { useContext } from "react";
 
-import { authMiddleware, client, Middleware } from "@/app/api";
+import { APIContext } from "@/providers/provider-api";
 
-const useAPI = () => {
-  useEffect(() => {
-    let middleware: Middleware;
-
-    const setupAuth = async () => {
-      middleware = authMiddleware(getSession);
-      client.use(middleware);
-    };
-
-    setupAuth();
-
-    return () => {
-      client.eject(middleware);
-    };
-  }, []);
-
-  return client;
-};
+export function useAPI() {
+  const context = useContext(APIContext);
+  if (!context) {
+    throw new Error("useAPI must be used within an APIProvider");
+  }
+  return context;
+}
 
 export default useAPI;

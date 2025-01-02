@@ -1,3 +1,5 @@
+import type { AuthenticatedRequest } from 'src/auth/auth';
+
 import {
   Controller,
   Get,
@@ -8,12 +10,11 @@ import {
   Param,
   UseGuards,
   NotFoundException,
-  UseInterceptors,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import ms from 'ms';
 
 import { ReviewService } from './review.service';
 import {
@@ -31,9 +32,20 @@ export class ReviewController {
 
   @Get()
   @ApiOkResponse({ type: [ReviewWithRelationsResponse] })
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(ms('10m'))
-  async list(): Promise<ReviewWithRelationsResponse[]> {
+  // @UseInterceptors(CacheInterceptor)
+  // @CacheTTL(ms('10m'))
+  async list(
+    @Req() req: AuthenticatedRequest,
+    @Query('feed') feed: 'trending' | 'friends' | 'you' = 'trending',
+  ): Promise<ReviewWithRelationsResponse[]> {
+    if (feed === 'friends')
+      return await this.reviewService.list({
+        creatorId: -1,
+      });
+    if (feed === 'you')
+      return await this.reviewService.list({
+        creatorId: req.user.id,
+      });
     return await this.reviewService.list();
   }
 

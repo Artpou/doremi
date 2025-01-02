@@ -11,7 +11,7 @@ import { Loading } from "@workspace/ui/components/loading";
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import ms from "ms";
 
-import { ItemCard } from "./ItemCard";
+import { Album } from "./album/album";
 
 import useAPI from "@/hooks/useAPI";
 
@@ -111,18 +111,13 @@ export const Search = () => {
                     {t("common.no_results")}
                   </div>
                 )}
-                {shouldShowResults &&
-                  items?.length > 0 &&
-                  items?.map((item, idx) => (
-                    <ItemCard
-                      key={idx}
-                      id={idx}
-                      name={item.title}
-                      image={item.image ?? undefined}
-                      artists={item.artists.map((artist) => artist.artist)}
-                      release_date={item.releaseYear?.toString()}
-                    />
-                  ))}
+                <div className="flex flex-col gap-2 p-2">
+                  {shouldShowResults &&
+                    items?.length > 0 &&
+                    items?.map((item, idx) => (
+                      <Album key={idx} album={item} isSmall />
+                    ))}
+                </div>
               </div>
             </ScrollArea>
           </div>

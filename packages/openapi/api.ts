@@ -652,7 +652,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["AlbumWithRelationsResponse"][];
+                };
             };
         };
     };
@@ -677,7 +679,9 @@ export interface operations {
     };
     ReviewController_list: {
         parameters: {
-            query?: never;
+            query: {
+                feed: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -819,7 +823,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AlbumResponse"];
+                    "application/json": components["schemas"]["AlbumWithRelationsResponse"];
                 };
             };
         };

@@ -3,16 +3,58 @@ import { Button } from "@workspace/ui/components/button";
 import { getTranslations } from "next-intl/server";
 import { BackgroundBeams } from "@workspace/ui/components/background-beams";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { DiscAlbumIcon, StarIcon, UsersRoundIcon } from "lucide-react";
+import { Suspense } from "react";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 
 import { auth } from "@/auth";
-import { GET } from "@/app/api/client";
-import { ItemCarousel } from "@/components/ItemCarousel";
-import { Feed } from "@/components/Feed";
-import { ItemCard } from "@/components/ItemCard";
+import { Album } from "@/components/album/album";
+import { ReviewCard } from "@/components/review/review-card";
+import { getAPI } from "@/lib/api";
+import { ReviewTabs, SidebarTabs } from "@/components/home/home-tabs";
 
-export default async function Home() {
+interface HomeProps {
+  searchParams: {
+    feed?: "trending" | "friends" | "you";
+    sidebar?: "releases" | "following";
+  };
+}
+
+async function getAlbums({ searchParams }: HomeProps) {
+  const sidebarParams = (await searchParams).sidebar ?? "releases";
+  const { GET } = getAPI();
+
+  if (sidebarParams === "following") {
+    const { data } = await GET("/me/top", {
+      next: { revalidate: 60 },
+    });
+    return data;
+  }
+
+  const { data } = await GET("/me/releases", {
+    next: { revalidate: 60 },
+  });
+  return data;
+}
+
+const EmptyCard = ({ children }: { children: React.ReactNode }) => (
+  <Card className="flex flex-col items-center justify-center gap-4 border py-8">
+    {children}
+  </Card>
+);
+
+export default async function Home({ searchParams }: HomeProps) {
   const session = await auth();
   const t = await getTranslations("common");
+  const { GET } = getAPI();
+  const feed = (await searchParams).feed ?? "trending";
+  const sidebar = (await searchParams).sidebar ?? "releases";
 
   if (!session) {
     return (
@@ -30,34 +72,94 @@ export default async function Home() {
     );
   }
 
-  const { data: releases } = await GET("/me/releases");
-  const { data: top } = await GET("/me/top");
+  const { data: reviews } = await GET("/reviews", {
+    params: { query: { feed } },
+    next: { revalidate: 60 },
+  });
+  const albums = await getAlbums({ searchParams });
 
   return (
-    <div className="flex size-full gap-4 self-center">
-      <div className="flex flex-col gap-2 sm:w-2/3 xl:w-3/4">
-        <Feed className="h-full" />
-      </div>
-      <div className="hidden flex-col sm:flex sm:w-1/3 xl:w-1/4 gap-4">
-        <ItemCarousel
-          items={(releases || []).slice(0, 8).map((item) => ({
-            imageUrl: item.image || "",
-            title: item.title || "",
-            artists: item.artists?.map((artist) => artist.artist.name),
-          }))}
-        />
-        <ScrollArea className="max-h-[300px] rounded-md border-border bg-card">
-          {(releases || []).map((item, idx) => (
-            <ItemCard
-              key={idx}
-              id={idx}
-              name={item.title}
-              image={item.image || ""}
-              artists={item.artists?.map(({ artist }) => artist)}
-              release_date={item.releaseYear}
-            />
-          ))}
+    <div className="flex size-full gap-4">
+      <div className="flex size-full flex-col gap-2">
+        <ReviewTabs />
+        <ScrollArea className="h-full min-h-0 flex-1">
+          <div className="flex flex-col gap-4">
+            <Suspense
+              fallback={Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-60" />
+              ))}
+            >
+              {!!reviews && reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <ReviewCard key={review.id} review={review} />
+                ))
+              ) : feed === "friends" ? (
+                <EmptyCard>
+                  <span>Friends</span>
+                  <Button>
+                    <UsersRoundIcon className="size-4" />
+                    Add friends
+                  </Button>
+                </EmptyCard>
+              ) : feed === "you" ? (
+                <EmptyCard>
+                  <span>You</span>
+                  <Button>
+                    <StarIcon className="size-4" />
+                    Add Review
+                  </Button>
+                </EmptyCard>
+              ) : (
+                <EmptyCard>
+                  <span>Trending</span>
+                </EmptyCard>
+              )}
+            </Suspense>
+          </div>
         </ScrollArea>
+      </div>
+      <div className="hidden size-full max-w-60 flex-col gap-2 sm:flex md:max-w-80 xl:max-w-96">
+        <SidebarTabs />
+        <Card className="mb-1 flex min-h-0 flex-1 flex-col">
+          <CardHeader className="flex-none">
+            <CardTitle className="flex items-center gap-2">
+              <DiscAlbumIcon className="size-4" />
+              <span>
+                {sidebar === "releases" ? "Latest Releases" : "Your favorites"}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <ScrollArea className="min-h-0 flex-1">
+            <CardContent className="flex flex-col gap-2">
+              <Suspense
+                fallback={Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12" />
+                ))}
+              >
+                {albums?.map((item) => (
+                  <Album key={item.id} album={item} isSmall />
+                ))}
+              </Suspense>
+            </CardContent>
+          </ScrollArea>
+        </Card>
+        <Card className="mt-1 flex min-h-0 flex-1 flex-col">
+          <CardHeader className="flex-none">
+            <CardTitle className="flex items-center gap-2">
+              <UsersRoundIcon className="size-4" />
+              <span>Friends</span>
+            </CardTitle>
+          </CardHeader>
+          <ScrollArea className="min-h-0 flex-1">
+            <CardContent className="flex flex-col gap-2">
+              <Suspense
+                fallback={Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12" />
+                ))}
+              ></Suspense>
+            </CardContent>
+          </ScrollArea>
+        </Card>
       </div>
     </div>
   );

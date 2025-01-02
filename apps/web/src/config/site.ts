@@ -1,4 +1,4 @@
-import { Home, User } from "lucide-react";
+import { Home, UserRound } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 
@@ -14,7 +14,7 @@ export const siteConfig = {
     {
       label: "profile",
       href: "/profile",
-      icon: User,
+      icon: UserRound,
     },
   ],
 };

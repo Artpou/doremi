@@ -26,13 +26,15 @@
     "next": "15.0.4",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^3.26.3",
+    "nuqs": "^2.3.0",
     "openapi-fetch": "^0.13.3",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "react-hook-form": "^7.54.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/ms": "^0.7.34",

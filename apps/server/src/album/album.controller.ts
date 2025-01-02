@@ -11,7 +11,7 @@ import { ReviewResponse } from 'src/review/review.dto';
 import { TrackResponse } from 'src/track/track.dto';
 
 import { AlbumService } from './album.service';
-import { AlbumResponse } from './album.dto';
+import { AlbumResponse, AlbumWithRelationsResponse } from './album.dto';
 
 @ApiTags('albums')
 @Controller('albums')
@@ -26,8 +26,8 @@ export class AlbumController {
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: AlbumResponse })
-  async get(@Param('id') id: number): Promise<AlbumResponse> {
+  @ApiOkResponse({ type: AlbumWithRelationsResponse })
+  async get(@Param('id') id: number): Promise<AlbumWithRelationsResponse> {
     const album = await this.albumService.get(id);
     if (!album) throw new NotFoundException('Album not found');
 

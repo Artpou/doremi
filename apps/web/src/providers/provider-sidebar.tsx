@@ -1,8 +1,7 @@
 import { SidebarProvider } from "@workspace/ui/components/sidebar";
-import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
-import { AppSidebar } from "@/components/AppSidebar";
-import { AppTopbar } from "@/components/AppTopbar";
+import { AppSidebar } from "@/components/app/app-sidebar";
+import { AppTopbar } from "@/components/app/app-topbar";
 import { auth } from "@/auth";
 
 export default async function Layout({
@@ -18,11 +17,9 @@ export default async function Layout({
     <SidebarProvider defaultOpen={false}>
       <AppTopbar />
       <AppSidebar />
-      <ScrollArea className="w-full">
-        <main className="container mx-auto flex max-h-screen grow flex-col items-center pt-14 sm:p-4 sm:pt-20">
-          {children}
-        </main>
-      </ScrollArea>
+      <main className="mx-auto flex h-screen w-full grow flex-col items-center pt-14 xl:container sm:p-4 sm:pt-20">
+        {children}
+      </main>
     </SidebarProvider>
   );
 }

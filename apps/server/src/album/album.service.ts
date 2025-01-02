@@ -16,6 +16,13 @@ export class AlbumService {
   async get(id: number) {
     return await this.db.query.albums.findFirst({
       where: eq(albums.id, id),
+      with: {
+        artists: {
+          with: {
+            artist: true,
+          },
+        },
+      },
     });
   }
 

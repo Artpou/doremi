@@ -14,7 +14,7 @@ import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 import useAPI from "@/hooks/useAPI";
-import SpotifyIcon from "@/components/Icons/SpotifyIcon";
+import SpotifyIcon from "@/components/icon/icon-spotify";
 
 const SignupSchema = z.object({
   name: z.string().optional(),

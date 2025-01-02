@@ -1,14 +1,16 @@
 import type {
   NewReleases,
+  Page,
   PartialSearchResult,
   SimplifiedAlbum,
-  Tracks,
+  Track,
 } from 'types/spotify';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { SearchQueryDto } from 'src/search/search.dto';
 import { AlbumWithRelationsResponse } from 'src/album/album.dto';
+import { hashStringToNumber } from 'utils/string';
 @Injectable()
 export class SpotifyService {
   private readonly logger = new Logger(SpotifyService.name);
@@ -37,7 +39,7 @@ export class SpotifyService {
 
   private convertAlbum(album: SimplifiedAlbum): AlbumWithRelationsResponse {
     return {
-      id: 0,
+      id: hashStringToNumber(album.id),
       title: album.name,
       image: album.images[0]?.url ?? null,
       releaseYear: new Date(album.release_date).getFullYear(),
@@ -47,7 +49,7 @@ export class SpotifyService {
       appleId: null,
       artists: album.artists.map((artist) => ({
         artist: {
-          id: 0,
+          id: hashStringToNumber(artist.id),
           name: artist.name,
           bio: null,
           image: null,
@@ -97,13 +99,17 @@ export class SpotifyService {
     };
   }
 
-  async userTop(accessToken: string, type: 'tracks' | 'artists') {
-    const result = await this.spotifyRequest<Tracks>(
-      `/me/top/${type}?time_range=short_term`,
+  async userTop(accessToken: string, type?: 'tracks' | 'artists') {
+    const { items } = await this.spotifyRequest<Page<Track>>(
+      `/me/top/${type ?? 'tracks'}?time_range=short_term&limit=40`,
       accessToken,
     );
 
-    return [];
+    return [
+      ...new Map(
+        items.map((track) => [track.album.id, this.convertAlbum(track.album)]),
+      ).values(),
+    ].slice(0, 20);
   }
 
   async newReleases(accessToken: string) {

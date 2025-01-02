@@ -5,12 +5,14 @@ import { SessionProvider } from "next-auth/react";
 import { cn } from "@workspace/ui/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { auth } from "@/auth";
-import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
-import SidebarProvider from "@/providers/SidebarProvider";
+import { ReactQueryProvider } from "@/providers/provider-react-query";
+import SidebarProvider from "@/providers/provider-sidebar";
+import { APIProvider } from "@/providers/provider-api";
 
 export const metadata: Metadata = {
   title: {
@@ -51,11 +53,15 @@ export default async function RootLayout({
         )}
       >
         <NextIntlClientProvider messages={messages}>
-          <SessionProvider session={session} refetchOnWindowFocus={false}>
-            <ReactQueryProvider>
-              <SidebarProvider>{children}</SidebarProvider>
-            </ReactQueryProvider>
-          </SessionProvider>
+          <NuqsAdapter>
+            <SessionProvider session={session} refetchOnWindowFocus={false}>
+              <ReactQueryProvider>
+                <APIProvider>
+                  <SidebarProvider>{children}</SidebarProvider>
+                </APIProvider>
+              </ReactQueryProvider>
+            </SessionProvider>
+          </NuqsAdapter>
         </NextIntlClientProvider>
       </body>
     </html>

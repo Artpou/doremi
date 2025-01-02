@@ -2,6 +2,8 @@ import createClient, { Middleware } from "openapi-fetch";
 import { paths } from "@workspace/openapi";
 import { Session } from "next-auth";
 
+import { auth } from "@/auth";
+
 export type { Middleware };
 
 export const authMiddleware = (
@@ -20,3 +22,8 @@ export const authMiddleware = (
 export const client = createClient<paths>({
   baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
 });
+
+export function getAPI() {
+  client.use(authMiddleware(auth));
+  return client;
+}
