@@ -9,16 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { DiscAlbumIcon, StarIcon, UsersRoundIcon } from "lucide-react";
+import { DiscAlbumIcon, UsersRoundIcon } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
 import { auth } from "@/auth";
 import { Album } from "@/components/album/album";
-import { ReviewCard } from "@/components/review/review-card";
 import { getAPI } from "@/lib/api";
 import { ReviewTabs, SidebarTabs } from "@/components/home/home-tabs";
-
+import {
+  ReviewList,
+  ReviewListSkeleton,
+} from "@/components/review/review-list";
+import { ProviderReview } from "@/providers/provider-review";
 interface HomeProps {
   searchParams: {
     feed?: "trending" | "friends" | "you";
@@ -42,12 +45,6 @@ async function getAlbums({ searchParams }: HomeProps) {
   });
   return data;
 }
-
-const EmptyCard = ({ children }: { children: React.ReactNode }) => (
-  <Card className="flex flex-col items-center justify-center gap-4 border py-8">
-    {children}
-  </Card>
-);
 
 export default async function Home({ searchParams }: HomeProps) {
   const session = await auth();
@@ -83,39 +80,9 @@ export default async function Home({ searchParams }: HomeProps) {
       <div className="flex size-full flex-col gap-2">
         <ReviewTabs />
         <ScrollArea className="h-full min-h-0 flex-1">
-          <div className="flex flex-col gap-4">
-            <Suspense
-              fallback={Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-60" />
-              ))}
-            >
-              {!!reviews && reviews.length > 0 ? (
-                reviews.map((review) => (
-                  <ReviewCard key={review.id} review={review} />
-                ))
-              ) : feed === "friends" ? (
-                <EmptyCard>
-                  <span>Friends</span>
-                  <Button>
-                    <UsersRoundIcon className="size-4" />
-                    Add friends
-                  </Button>
-                </EmptyCard>
-              ) : feed === "you" ? (
-                <EmptyCard>
-                  <span>You</span>
-                  <Button>
-                    <StarIcon className="size-4" />
-                    Add Review
-                  </Button>
-                </EmptyCard>
-              ) : (
-                <EmptyCard>
-                  <span>Trending</span>
-                </EmptyCard>
-              )}
-            </Suspense>
-          </div>
+          <Suspense fallback={ReviewListSkeleton}>
+            <ReviewList items={reviews || []} />
+          </Suspense>
         </ScrollArea>
       </div>
       <div className="hidden size-full max-w-60 flex-col gap-2 sm:flex md:max-w-80 xl:max-w-96">
@@ -131,15 +98,22 @@ export default async function Home({ searchParams }: HomeProps) {
           </CardHeader>
           <ScrollArea className="min-h-0 flex-1">
             <CardContent className="flex flex-col gap-2">
-              <Suspense
-                fallback={Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-12" />
-                ))}
-              >
-                {albums?.map((item) => (
-                  <Album key={item.id} album={item} isSmall />
-                ))}
-              </Suspense>
+              <ProviderReview layoutId="sidebar">
+                <Suspense
+                  fallback={Array.from({ length: 5 }).map((_, i) => (
+                    <Skeleton key={i} className="h-12" />
+                  ))}
+                >
+                  {albums?.map((item) => (
+                    <Album
+                      key={item.id}
+                      album={item}
+                      layoutId="sidebar"
+                      isSmall
+                    />
+                  ))}
+                </Suspense>
+              </ProviderReview>
             </CardContent>
           </ScrollArea>
         </Card>

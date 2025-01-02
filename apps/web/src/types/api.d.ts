@@ -15,3 +15,6 @@ export type ApiResponse<
 }
   ? R
   : never;
+
+export type IReview = ApiResponse<"/reviews", "get">[0];
+export type IAlbum = ApiResponse<"/albums/{id}", "get">;
