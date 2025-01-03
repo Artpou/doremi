@@ -16,7 +16,7 @@ interface ReviewListProps {
 export function ReviewList({ items }: ReviewListProps) {
   return (
     <ProviderReview layoutId="review">
-      <div className="flex size-full flex-col gap-4">
+      <div className="flex size-full flex-col sm:gap-4">
         {items.map((review) => (
           <ReviewCard key={review.id} review={review} />
         ))}
