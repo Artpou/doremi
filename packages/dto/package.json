@@ -1,0 +1,37 @@
+{
+  "name": "@workspace/dto",
+  "private": true,
+  "sideEffects": false,
+  "exports": {
+    "./search.dto": {
+      "types": "./dist/search.dto.d.ts",
+      "import": "./dist/search.dto.mjs",
+      "require": "./dist/search.dto.js"
+    },
+    "./auth.dto": {
+      "types": "./dist/auth.dto.d.ts",
+      "import": "./dist/auth.dto.mjs",
+      "require": "./dist/auth.dto.js"
+    },
+    "./review.dto": {
+      "types": "./dist/review.dto.d.ts",
+      "import": "./dist/review.dto.mjs",
+      "require": "./dist/review.dto.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@workspace/typescript-config": "workspace:*",
+    "@workspace/eslint-config": "workspace:*",
+    "typescript": "catalog:",
+    "tsup": "catalog:"
+  }
+}

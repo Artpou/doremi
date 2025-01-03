@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { DiscAlbumIcon, UsersRoundIcon } from "lucide-react";
+import { DiscAlbumIcon } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
@@ -24,8 +24,8 @@ import {
 import { ProviderReview } from "@/providers/provider-review";
 interface HomeProps {
   searchParams: {
-    feed?: "trending" | "friends" | "you";
-    sidebar?: "releases" | "following";
+    feed?: string;
+    sidebar?: string;
   };
 }
 
@@ -98,7 +98,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </CardHeader>
           <ScrollArea className="min-h-0 flex-1">
             <CardContent className="flex flex-col gap-2">
-              <ProviderReview layoutId="sidebar">
+              <ProviderReview layoutId={sidebar}>
                 <Suspense
                   fallback={Array.from({ length: 5 }).map((_, i) => (
                     <Skeleton key={i} className="h-12" />
@@ -108,29 +108,12 @@ export default async function Home({ searchParams }: HomeProps) {
                     <Album
                       key={item.id}
                       album={item}
-                      layoutId="sidebar"
+                      layoutId={sidebar}
                       isSmall
                     />
                   ))}
                 </Suspense>
               </ProviderReview>
-            </CardContent>
-          </ScrollArea>
-        </Card>
-        <Card className="mt-1 flex min-h-0 flex-1 flex-col">
-          <CardHeader className="flex-none">
-            <CardTitle className="flex items-center gap-2">
-              <UsersRoundIcon className="size-4" />
-              <span>Friends</span>
-            </CardTitle>
-          </CardHeader>
-          <ScrollArea className="min-h-0 flex-1">
-            <CardContent className="flex flex-col gap-2">
-              <Suspense
-                fallback={Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-12" />
-                ))}
-              ></Suspense>
             </CardContent>
           </ScrollArea>
         </Card>

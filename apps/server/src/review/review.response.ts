@@ -1,25 +1,8 @@
 import { reviews } from 'db/schema';
 import { createSelectSchema } from 'drizzle-zod';
 import { createZodDto } from 'nestjs-zod';
-import { AlbumSchemaWithRelations } from 'src/album/album.dto';
+import { AlbumSchemaWithRelations } from 'src/album/album.response';
 import { z } from 'zod';
-
-export class ListReviewsDto extends createZodDto(
-  z
-    .object({
-      creatorId: z.number().optional(),
-      albumId: z.number().optional(),
-      trackId: z.number().optional(),
-    })
-    .default({}),
-) {}
-
-export class CreateReviewDto extends createZodDto(
-  z.object({
-    comment: z.string().min(1, 'Comment is required'),
-    note: z.number().min(0).max(5),
-  }),
-) {}
 
 export const ReviewSchema = createSelectSchema(reviews);
 export class ReviewResponse extends createZodDto(ReviewSchema) {}

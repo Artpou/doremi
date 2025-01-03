@@ -4,15 +4,21 @@ import { Injectable, Inject } from '@nestjs/common';
 import { DRIZZLE } from 'src/drizzle/drizzle.module';
 import { reviews } from 'db/schema';
 import { and, eq, isNotNull } from 'drizzle-orm';
-import { Model } from 'db/types';
-
-import { ListReviewsDto } from './review.dto';
+import {
+  CreateReviewSchema,
+  ListReviewsSchema,
+} from '@workspace/dto/review.dto';
+import z from 'zod';
 
 @Injectable()
 export class ReviewService {
   constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
 
-  async list({ creatorId, albumId, trackId }: ListReviewsDto = {}) {
+  async list({
+    creatorId,
+    albumId,
+    trackId,
+  }: z.infer<typeof ListReviewsSchema>) {
     return await this.db.query.reviews.findMany({
       where: and(
         creatorId ? eq(reviews.creatorId, creatorId) : undefined,
@@ -47,12 +53,18 @@ export class ReviewService {
     });
   }
 
-  async create(dto: Partial<Model<'reviews'>> & { note: number }) {
+  async create(
+    dto: z.infer<typeof CreateReviewSchema> & { creatorId: number },
+  ) {
+    console.log('🚀 ~ ReviewService ~ create ~ dto:', dto);
     const [review] = await this.db.insert(reviews).values(dto).returning();
     return review;
   }
 
-  async update(id: number, dto: Partial<Model<'reviews'>>) {
+  async update(
+    id: number,
+    dto: z.infer<typeof CreateReviewSchema> & { creatorId: number },
+  ) {
     const [review] = await this.db
       .update(reviews)
       .set(dto)

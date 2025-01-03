@@ -12,19 +12,12 @@ import { Alert, AlertTitle } from "@workspace/ui/components/alert";
 import { Input, InputWrapper } from "@workspace/ui/components/input";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { RegisterSchema } from "@workspace/dto/auth.dto";
 
 import useAPI from "@/hooks/useAPI";
 import SpotifyIcon from "@/components/icon/icon-spotify";
 
-const SignupSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-});
-
-type SignupType = z.infer<typeof SignupSchema>;
+type RegisterType = z.infer<typeof RegisterSchema>;
 
 const SignupPage = () => {
   const router = useRouter();
@@ -36,12 +29,12 @@ const SignupPage = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<SignupType>({
-    resolver: zodResolver(SignupSchema),
+  } = useForm<RegisterType>({
+    resolver: zodResolver(RegisterSchema),
   });
 
   const { mutate: signup, isPending } = useMutation({
-    mutationFn: async (data: SignupType) => {
+    mutationFn: async (data: RegisterType) => {
       const { error } = await POST("/auth/register", {
         body: data,
       });
@@ -49,8 +42,7 @@ const SignupPage = () => {
       if (error) throw error;
 
       const signInResult = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
+        ...data,
         redirect: false,
       });
       if (signInResult?.error) throw signInResult.error;
@@ -64,7 +56,7 @@ const SignupPage = () => {
     },
   });
 
-  const onSubmit = (data: SignupType): void => {
+  const onSubmit = (data: RegisterType): void => {
     signup(data);
   };
 
@@ -88,13 +80,6 @@ const SignupPage = () => {
               <AlertTitle>{errors.root.message}</AlertTitle>
             </Alert>
           )}
-          <InputWrapper
-            className="w-full"
-            label={t("auth.name")}
-            error={errors.name?.message}
-          >
-            <Input {...register("name")} />
-          </InputWrapper>
           <InputWrapper
             className="w-full"
             label={t("auth.email")}

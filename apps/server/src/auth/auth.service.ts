@@ -10,8 +10,15 @@ import { UserService } from 'src/user/user.service';
 import ms from 'ms';
 import { ProviderService } from 'src/provider/provider.service';
 import { SpotifyService } from 'src/spotify/spotify.service';
+import {
+  LoginSchema,
+  RefreshSchema,
+  RegisterSchema,
+  SpotifyAuthSchema,
+} from '@workspace/dto/auth.dto';
+import z from 'zod';
 
-import { LoginDto, RefreshDto, RegisterDto, TokenResponse } from './auth.dto';
+import { TokenResponse } from './auth.response';
 
 // due to spotify's token expiration
 const ACCESS_TOKEN_EXPIRE_TIME = '30m';
@@ -63,7 +70,7 @@ export class AuthService {
     return user;
   }
 
-  async login(dto: LoginDto): Promise<TokenResponse> {
+  async login(dto: z.infer<typeof LoginSchema>): Promise<TokenResponse> {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
@@ -72,14 +79,16 @@ export class AuthService {
     return { ...tokens, email: user.email };
   }
 
-  async register(dto: RegisterDto): Promise<TokenResponse> {
+  async register(dto: z.infer<typeof RegisterSchema>): Promise<TokenResponse> {
     const user = await this.usersService.create(dto);
     const tokens = await this.getTokens(user.id);
 
     return { ...tokens, email: user.email };
   }
 
-  async refreshToken(dto: RefreshDto): Promise<TokenResponse> {
+  async refreshToken(
+    dto: z.infer<typeof RefreshSchema>,
+  ): Promise<TokenResponse> {
     const test = jwtDecode(dto.refresh);
     if (!test.sub || !test.exp)
       throw new UnauthorizedException('Invalid token');
@@ -109,12 +118,9 @@ export class AuthService {
     return { ...tokens, email: user.email };
   }
 
-  async authenticateSpotify(dto: {
-    email: string;
-    id: string;
-    access_token: string;
-    refresh_token: string;
-  }): Promise<TokenResponse> {
+  async authenticateSpotify(
+    dto: z.infer<typeof SpotifyAuthSchema>,
+  ): Promise<TokenResponse> {
     const user = await this.usersService.findByEmail(dto.email);
     const provider = user
       ? await this.providerService.findByUserId(user.id)

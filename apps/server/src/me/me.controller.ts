@@ -7,7 +7,7 @@ import { SpotifyService } from 'src/spotify/spotify.service';
 import { ProviderGuard } from 'src/provider/provider.guard';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import ms from 'ms';
-import { AlbumWithRelationsResponse } from 'src/album/album.dto';
+import { AlbumWithRelationsResponse } from 'src/album/album.response';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('me')

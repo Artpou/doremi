@@ -11,16 +11,22 @@ import {
 import { ApiOkResponse } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { UserService } from 'src/user/user.service';
-
-import { AuthService } from './auth.service';
+import { createZodDto } from 'nestjs-zod';
 import {
-  LoginDto,
-  RefreshDto,
-  RegisterDto,
-  SpotifyAuthDto,
-  TokenResponse,
-} from './auth.dto';
+  LoginSchema,
+  RefreshSchema,
+  RegisterSchema,
+  SpotifyAuthSchema,
+} from '@workspace/dto/auth.dto';
+
+import { TokenResponse } from './auth.response';
+import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './auth.guard';
+
+class LoginDto extends createZodDto(LoginSchema) {}
+class RefreshDto extends createZodDto(RefreshSchema) {}
+class RegisterDto extends createZodDto(RegisterSchema) {}
+class SpotifyAuthDto extends createZodDto(SpotifyAuthSchema) {}
 
 @Controller('auth')
 export class AuthController {

@@ -6,7 +6,6 @@
     "moduleResolution": "NodeNext",
     "strictNullChecks": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-
+    "emitDecoratorMetadata": true
   }
 }

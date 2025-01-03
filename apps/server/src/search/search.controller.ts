@@ -1,31 +1,17 @@
 import type { AuthenticatedRequest } from 'src/auth/auth';
-import type { Cache } from 'cache-manager';
 
-import {
-  Controller,
-  Get,
-  Inject,
-  Query,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { ProviderGuard } from 'src/provider/provider.guard';
-import { SpotifyService } from 'src/spotify/spotify.service';
 
 import { SearchService } from './search.service';
-import { SearchResponse } from './search.dto';
+import { SearchResponse } from './search.response';
 
 @Controller('search')
 @UseGuards(JwtAuthGuard, ProviderGuard)
 export class SearchController {
-  constructor(
-    private searchService: SearchService,
-    private spotifyService: SpotifyService,
-    @Inject(CACHE_MANAGER) private cacheService: Cache,
-  ) {}
+  constructor(private searchService: SearchService) {}
 
   @Get()
   @ApiOkResponse({ type: SearchResponse })

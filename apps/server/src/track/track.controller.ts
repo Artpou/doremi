@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { ReviewResponse } from 'src/review/review.dto';
+import { ReviewResponse } from 'src/review/review.response';
 
 import { TrackService } from './track.service';
-import { TrackResponse } from './track.dto';
+import { TrackResponse } from './track.response';
 
 @ApiTags('tracks')
 @Controller('tracks')

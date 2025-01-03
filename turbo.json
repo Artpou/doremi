@@ -9,6 +9,7 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
@@ -16,6 +17,9 @@
       "cache": false
     },
     "generate-schema": {
+      "cache": false
+    },
+    "clean": {
       "cache": false
     }
   },

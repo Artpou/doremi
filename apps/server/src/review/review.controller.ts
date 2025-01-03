@@ -15,14 +15,14 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { CreateReviewSchema } from '@workspace/dto/review.dto';
+import { createZodDto } from 'nestjs-zod';
 
 import { ReviewService } from './review.service';
-import {
-  CreateReviewDto,
-  ReviewResponse,
-  ReviewWithRelationsResponse,
-} from './review.dto';
+import { ReviewResponse, ReviewWithRelationsResponse } from './review.response';
 import { ReviewGuard } from './review.guard';
+
+class CreateReviewDto extends createZodDto(CreateReviewSchema) {}
 
 @ApiTags('reviews')
 @Controller('reviews')
@@ -46,7 +46,7 @@ export class ReviewController {
       return await this.reviewService.list({
         creatorId: req.user.id,
       });
-    return await this.reviewService.list();
+    return await this.reviewService.list({});
   }
 
   @Get(':id')
@@ -60,8 +60,14 @@ export class ReviewController {
 
   @Post()
   @ApiOkResponse({ type: ReviewResponse })
-  async create(@Body() dto: CreateReviewDto): Promise<ReviewResponse> {
-    const review = await this.reviewService.create(dto);
+  async create(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: CreateReviewDto,
+  ): Promise<ReviewResponse> {
+    const review = await this.reviewService.create({
+      ...dto,
+      creatorId: req.user.id,
+    });
     if (!review) throw new Error('Review creation failed');
     return review;
   }
@@ -71,9 +77,13 @@ export class ReviewController {
   @ApiOkResponse({ type: ReviewResponse })
   async update(
     @Param('id') id: number,
+    @Req() req: AuthenticatedRequest,
     @Body() dto: CreateReviewDto,
   ): Promise<ReviewResponse> {
-    const review = await this.reviewService.update(id, dto);
+    const review = await this.reviewService.update(id, {
+      ...dto,
+      creatorId: req.user.id,
+    });
     if (!review) throw new Error('Review update failed');
     return review;
   }

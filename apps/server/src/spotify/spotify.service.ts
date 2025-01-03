@@ -8,9 +8,11 @@ import type {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { SearchQueryDto } from 'src/search/search.dto';
-import { AlbumWithRelationsResponse } from 'src/album/album.dto';
 import { hashStringToNumber } from 'utils/string';
+import { AlbumWithRelationsResponse } from 'src/album/album.response';
+import { SearchQuerySchema } from '@workspace/dto/search.dto';
+import z from 'zod';
+
 @Injectable()
 export class SpotifyService {
   private readonly logger = new Logger(SpotifyService.name);
@@ -84,7 +86,10 @@ export class SpotifyService {
     return response.data;
   }
 
-  async search(accessToken: string, { search, type }: SearchQueryDto) {
+  async search(
+    accessToken: string,
+    { search, type }: z.infer<typeof SearchQuerySchema>,
+  ) {
     const { albums } = await this.spotifyRequest<PartialSearchResult>(
       `/search?${new URLSearchParams({
         q: search,

@@ -12,15 +12,9 @@ import { Alert, AlertTitle } from "@workspace/ui/components/alert";
 import { Input, InputWrapper } from "@workspace/ui/components/input";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { LoginSchema } from "@workspace/dto/auth.dto";
 
 import SpotifyIcon from "@/components/icon/icon-spotify";
-
-const LoginSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-});
 
 type LoginType = z.infer<typeof LoginSchema>;
 
@@ -56,9 +50,7 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmit = async (data: LoginType): Promise<undefined> => {
-    login(data);
-  };
+  const onSubmit = async (data: LoginType) => login(data);
 
   return (
     <div className="flex h-full flex-col items-center justify-center">

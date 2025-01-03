@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { ReviewResponse } from 'src/review/review.dto';
-import { TrackResponse } from 'src/track/track.dto';
+import { TrackResponse } from 'src/track/track.response';
+import { ReviewResponse } from 'src/review/review.response';
 
 import { AlbumService } from './album.service';
-import { AlbumResponse, AlbumWithRelationsResponse } from './album.dto';
+import { AlbumResponse, AlbumWithRelationsResponse } from './album.response';
 
 @ApiTags('albums')
 @Controller('albums')

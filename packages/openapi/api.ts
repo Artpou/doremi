@@ -449,8 +449,9 @@ export interface components {
             updatedAt: unknown;
         };
         CreateReviewDto: {
-            comment: string;
+            albumId: number;
             note: number;
+            comment?: string;
         };
         AlbumResponse: {
             id: number;

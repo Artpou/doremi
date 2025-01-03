@@ -14,6 +14,7 @@ interface ReviewListProps {
 
 export function ProviderReview({ children, layoutId }: ReviewListProps) {
   const {
+    review,
     selectedAlbum,
     layoutId: layoutIdStore,
     setSelectedAlbum,
@@ -47,7 +48,11 @@ export function ProviderReview({ children, layoutId }: ReviewListProps) {
           <div className="fixed inset-0 z-[100] grid place-items-center">
             <div ref={ref} className="w-full max-w-lg">
               <motion.div layoutId={`${layoutId}-${selectedAlbum.id}`}>
-                <ReviewEdit layoutId={layoutId} album={selectedAlbum} />
+                <ReviewEdit
+                  layoutId={layoutId}
+                  album={selectedAlbum}
+                  review={review}
+                />
               </motion.div>
             </div>
           </div>

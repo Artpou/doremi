@@ -7,10 +7,9 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { AlbumResponse } from 'src/album/album.dto';
 
 import { ArtistService } from './artist.service';
-import { ArtistResponse } from './artist.dto';
+import { ArtistResponse } from './artist.response';
 
 @ApiTags('artists')
 @Controller('artists')
