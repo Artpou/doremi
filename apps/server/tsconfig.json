@@ -1,8 +1,15 @@
 {
-  "extends": "@workspace/typescript-config/nestjs.json",
+  "extends": "@workspace/config/nest/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@db/*": ["./db/*"],
+      "@utils/*": ["./utils/*"]
+    },
     "plugins": [{ "name": "nestjs" }]
-  }
+  },
+  "include": ["src/**/*", "db/**/*", "utils/**/*", "seed.ts"],
+  "exclude": ["dist", "node_modules"]
 }

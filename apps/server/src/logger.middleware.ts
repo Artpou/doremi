@@ -1,6 +1,6 @@
-import { Logger } from 'nestjs-pino';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {

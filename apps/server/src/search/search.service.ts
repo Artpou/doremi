@@ -1,10 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/auth/auth';
-import { SpotifyService } from 'src/spotify/spotify.service';
-import { SearchQuerySchema } from '@workspace/dto/search.dto';
 import z from 'zod';
 
-import { SearchResponse } from './search.response';
+import { SearchQuerySchema } from '@workspace/request/search.request';
+
+import { AuthenticatedRequest } from '@/auth/auth';
+import { SpotifyService } from '@/spotify/spotify.service';
+
+import { SearchResponse } from './search.schema';
 
 @Injectable()
 export class SearchService {

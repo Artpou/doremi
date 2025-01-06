@@ -13,8 +13,9 @@
     "start:prod": "node dist/main",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx db/migrate.ts",
-    "db:seed": "tsx db/seed.ts",
+    "db:seed": "tsx src/seed.ts",
     "db:push": "drizzle-kit push",
+    "db:reset": "tsx db/reset.ts && pnpm db:generate && pnpm db:push && pnpm db:seed",
     "db:studio": "drizzle-kit studio",
     "test": "jest",
     "test:watch": "jest --watch --runInBand",
@@ -49,8 +50,8 @@
     "swagger-typescript-api": "^13.0.23"
   },
   "devDependencies": {
-    "@workspace/typescript-config": "workspace:*",
-    "@workspace/dto": "workspace:*",
+    "@workspace/config": "workspace:*",
+    "@workspace/request": "workspace:*",
     "typescript": "catalog:",
     "@fastify/static": "7.0.4",
     "@nestjs/axios": "^3.1.3",

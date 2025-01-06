@@ -1,17 +1,19 @@
 import {
   Controller,
   Get,
+  NotFoundException,
   Param,
   UseGuards,
-  NotFoundException,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { TrackResponse } from 'src/track/track.response';
-import { ReviewResponse } from 'src/review/review.response';
+import { createZodDto } from 'nestjs-zod';
 
+import { JwtAuthGuard } from '@/auth/auth.guard';
+
+import { AlbumResponse, AlbumResponseSchema } from './album.schema';
 import { AlbumService } from './album.service';
-import { AlbumResponse, AlbumWithRelationsResponse } from './album.response';
+
+class AlbumResponseDto extends createZodDto(AlbumResponseSchema) {}
 
 @ApiTags('albums')
 @Controller('albums')
@@ -20,29 +22,16 @@ export class AlbumController {
   constructor(private albumService: AlbumService) {}
 
   @Get()
-  @ApiOkResponse({ type: [AlbumResponse] })
+  @ApiOkResponse({ type: [AlbumResponseDto], description: 'List of albums' })
   async list(): Promise<AlbumResponse[]> {
-    return await this.albumService.list();
+    return await this.albumService.findMany({});
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: AlbumWithRelationsResponse })
-  async get(@Param('id') id: number): Promise<AlbumWithRelationsResponse> {
-    const album = await this.albumService.get(id);
+  @ApiOkResponse({ type: AlbumResponseDto })
+  async get(@Param('id') id: number): Promise<AlbumResponse> {
+    const album = await this.albumService.findById(id);
     if (!album) throw new NotFoundException('Album not found');
-
     return album;
-  }
-
-  @Get(':id/reviews')
-  @ApiOkResponse({ type: [ReviewResponse] })
-  async reviews(@Param('id') id: number): Promise<ReviewResponse[]> {
-    return await this.albumService.reviews(id);
-  }
-
-  @Get(':id/tracks')
-  @ApiOkResponse({ type: [TrackResponse] })
-  async tracks(@Param('id') id: number): Promise<TrackResponse[]> {
-    return await this.albumService.tracks(id);
   }
 }

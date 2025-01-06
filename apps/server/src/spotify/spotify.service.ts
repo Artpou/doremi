@@ -1,3 +1,5 @@
+import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
 import type {
   NewReleases,
   Page,
@@ -5,13 +7,12 @@ import type {
   SimplifiedAlbum,
   Track,
 } from 'types/spotify';
-
-import { Injectable, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { hashStringToNumber } from 'utils/string';
-import { AlbumWithRelationsResponse } from 'src/album/album.response';
-import { SearchQuerySchema } from '@workspace/dto/search.dto';
 import z from 'zod';
+
+import { SearchQuerySchema } from '@workspace/request/search.request';
+
+import { AlbumResponse } from '@/album/album.schema';
 
 @Injectable()
 export class SpotifyService {
@@ -39,28 +40,25 @@ export class SpotifyService {
     return data;
   }
 
-  private convertAlbum(album: SimplifiedAlbum): AlbumWithRelationsResponse {
+  private convertAlbum(album: SimplifiedAlbum): AlbumResponse {
     return {
       id: hashStringToNumber(album.id),
       title: album.name,
       image: album.images[0]?.url ?? null,
-      releaseYear: new Date(album.release_date).getFullYear(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      releaseDate: new Date(album.release_date),
       spotifyId: album.id,
       appleId: null,
       artists: album.artists.map((artist) => ({
         artist: {
           id: hashStringToNumber(artist.id),
-          name: artist.name,
-          bio: null,
           image: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          name: artist.name,
           spotifyId: artist.id,
           appleId: null,
         },
       })),
+      tags: [],
+      tracks: [],
     };
   }
 

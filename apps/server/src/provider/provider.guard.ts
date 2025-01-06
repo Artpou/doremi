@@ -4,7 +4,8 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/auth/auth';
+
+import { AuthenticatedRequest } from '@/auth/auth';
 
 import { ProviderService } from './provider.service';
 
@@ -17,7 +18,9 @@ export class ProviderGuard implements CanActivate {
 
     if (!request.user) throw new UnauthorizedException('No user found');
 
-    const provider = await this.providerService.findByUserId(request.user.id);
+    const provider = await this.providerService.find({
+      userId: request.user.id,
+    });
 
     if (!provider) throw new UnauthorizedException('No provider found');
 

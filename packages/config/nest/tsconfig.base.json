@@ -1,0 +1,11 @@
+{
+  "extends": "../base/tsconfig.base.json",
+  "display": "Nest",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

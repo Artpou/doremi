@@ -1,20 +1,24 @@
-import type { AuthenticatedRequest } from 'src/auth/auth';
-
 import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { ProviderGuard } from 'src/provider/provider.guard';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { createZodDto } from 'nestjs-zod';
 
+import type { AuthenticatedRequest } from '@/auth/auth';
+import { JwtAuthGuard } from '@/auth/auth.guard';
+import { ProviderGuard } from '@/provider/provider.guard';
+
+import { SearchResponseSchema, SearchResponse } from './search.schema';
 import { SearchService } from './search.service';
-import { SearchResponse } from './search.response';
 
+class SearchResponseDto extends createZodDto(SearchResponseSchema) {}
+
+@ApiTags('search')
 @Controller('search')
 @UseGuards(JwtAuthGuard, ProviderGuard)
 export class SearchController {
   constructor(private searchService: SearchService) {}
 
   @Get()
-  @ApiOkResponse({ type: SearchResponse })
+  @ApiOkResponse({ type: SearchResponseDto })
   async search(
     @Request() req: AuthenticatedRequest,
     @Query('search') search: string,

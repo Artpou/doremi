@@ -4,10 +4,13 @@ import { IAlbum, IReview } from "@/types/api";
 
 interface ReviewStore {
   review: IReview | null;
-  selectedAlbum: IAlbum | null;
+  selectedAlbum: Omit<IAlbum, "tracks"> | null;
   layoutId: string;
   setReview: (review: IReview | null) => void;
-  setSelectedAlbum: (album: IAlbum | null, layoutId?: string) => void;
+  setSelectedAlbum: (
+    album: Omit<IAlbum, "tracks"> | null,
+    layoutId?: string,
+  ) => void;
 }
 
 export const useReviewStore = create<ReviewStore>((set) => ({

@@ -1,25 +1,26 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LoggerModule } from 'nestjs-pino';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { ZodValidationPipe } from 'nestjs-zod';
-import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { redisStore } from 'cache-manager-redis-yet';
 import ms from 'ms';
+import { LoggerModule } from 'nestjs-pino';
+import { ZodValidationPipe } from 'nestjs-zod';
 
-import { LoggerMiddleware } from './logger.middleware';
+import { AlbumModule } from './album/album.module';
+import { ArtistModule } from './artist/artist.module';
 import { AuthModule } from './auth/auth.module';
 import { DrizzleModule } from './drizzle/drizzle.module';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { LoggerMiddleware } from './logger.middleware';
+import { MeModule } from './me/me.module';
+import { ProviderModule } from './provider/provider.module';
+import { ReviewModule } from './review/review.module';
 import { SearchModule } from './search/search.module';
 import { SpotifyModule } from './spotify/spotify.module';
-import { ProviderModule } from './provider/provider.module';
-import { MeModule } from './me/me.module';
-import { ReviewModule } from './review/review.module';
-import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
-import { ArtistModule } from './artist/artist.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { ArtistModule } from './artist/artist.module';
     AlbumModule,
     TrackModule,
     ArtistModule,
+    UserModule,
   ],
   providers: [
     {

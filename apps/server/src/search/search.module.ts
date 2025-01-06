@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { DrizzleModule } from 'src/drizzle/drizzle.module';
-import { ProviderService } from 'src/provider/provider.service';
-import { SpotifyModule } from 'src/spotify/spotify.module';
+
+import { DrizzleModule } from '@/drizzle/drizzle.module';
+import { ProviderService } from '@/provider/provider.service';
+import { SpotifyModule } from '@/spotify/spotify.module';
 
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';

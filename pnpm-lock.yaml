@@ -193,12 +193,12 @@ importers:
       '@types/pg':
         specifier: ^8.11.10
         version: 8.11.10
-      '@workspace/dto':
+      '@workspace/config':
         specifier: workspace:*
-        version: link:../../packages/dto
-      '@workspace/typescript-config':
+        version: link:../../packages/config
+      '@workspace/request':
         specifier: workspace:*
-        version: link:../../packages/typescript-config
+        version: link:../../packages/request
       cache-manager-redis-store:
         specifier: ^3.0.1
         version: 3.0.1
@@ -253,9 +253,12 @@ importers:
       '@uidotdev/usehooks':
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@workspace/dto':
+      '@workspace/openapi':
         specifier: workspace:*
-        version: link:../../packages/dto
+        version: link:../../packages/openapi
+      '@workspace/request':
+        specifier: workspace:*
+        version: link:../../packages/request
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -326,15 +329,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:react19
         version: 19.0.1
-      '@workspace/eslint-config':
+      '@workspace/config':
         specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@workspace/openapi':
-        specifier: workspace:*
-        version: link:../../packages/openapi
-      '@workspace/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
+        version: link:../../packages/config
       autoprefixer:
         specifier: 'catalog:'
         version: 10.4.20(postcss@8.4.49)
@@ -351,26 +348,7 @@ importers:
         specifier: 'catalog:'
         version: 5.7.2
 
-  packages/dto:
-    dependencies:
-      zod:
-        specifier: 'catalog:'
-        version: 3.23.8
-    devDependencies:
-      '@workspace/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@workspace/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      tsup:
-        specifier: 'catalog:'
-        version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.7.2
-
-  packages/eslint-config:
+  packages/config:
     devDependencies:
       '@next/eslint-plugin-next':
         specifier: ^15
@@ -426,8 +404,23 @@ importers:
       openapi-typescript:
         specifier: ^7.4.4
         version: 7.4.4(typescript@5.7.2)
+    devDependencies:
+      '@workspace/config':
+        specifier: workspace:*
+        version: link:../config
 
-  packages/typescript-config: {}
+  packages/request:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
+    devDependencies:
+      '@workspace/config':
+        specifier: workspace:*
+        version: link:../config
+      tsup:
+        specifier: 'catalog:'
+        version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
 
   packages/ui:
     dependencies:
@@ -507,12 +500,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:react19
         version: 19.0.1
-      '@workspace/eslint-config':
+      '@workspace/config':
         specifier: workspace:*
-        version: link:../eslint-config
-      '@workspace/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
+        version: link:../config
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)

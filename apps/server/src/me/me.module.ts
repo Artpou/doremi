@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SpotifyModule } from 'src/spotify/spotify.module';
-import { ProviderModule } from 'src/provider/provider.module';
+
+import { ProviderModule } from '@/provider/provider.module';
+import { SpotifyModule } from '@/spotify/spotify.module';
 
 import { MeController } from './me.controller';
 

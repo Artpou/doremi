@@ -3,22 +3,24 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from 'bcrypt';
 import { jwtDecode } from 'jwt-decode';
-import { UserService } from 'src/user/user.service';
 import ms from 'ms';
-import { ProviderService } from 'src/provider/provider.service';
-import { SpotifyService } from 'src/spotify/spotify.service';
-import {
-  LoginSchema,
-  RefreshSchema,
-  RegisterSchema,
-  SpotifyAuthSchema,
-} from '@workspace/dto/auth.dto';
-import z from 'zod';
 
-import { TokenResponse } from './auth.response';
+import {
+  LoginBody,
+  RefreshBody,
+  RegisterBody,
+  SpotifyAuthBody,
+} from '@workspace/request/auth.request';
+
+import { ProviderService } from '@/provider/provider.service';
+import { SpotifyService } from '@/spotify/spotify.service';
+import { UserResponse } from '@/user/user.schema';
+import { UserService } from '@/user/user.service';
+
+import { TokenResponse } from './auth.schema';
 
 // due to spotify's token expiration
 const ACCESS_TOKEN_EXPIRE_TIME = '30m';
@@ -33,7 +35,9 @@ export class AuthService {
     private spotifyService: SpotifyService,
   ) {}
 
-  private async getTokens(id: string | number) {
+  private async getTokens(
+    id: string | number,
+  ): Promise<Omit<TokenResponse, 'email'>> {
     const expires_in = Date.now() + ms(ACCESS_TOKEN_EXPIRE_TIME);
 
     const [access_token, refresh_token] = await Promise.all([
@@ -60,18 +64,20 @@ export class AuthService {
     };
   }
 
-  async validateUser(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email);
-    if (!user || !user.password) return null;
+  async validateUser(email: string, password: string): Promise<UserResponse> {
+    const user = await this.usersService.findWithPassword(email);
+    if (!user || !user.password)
+      throw new UnauthorizedException('Invalid credentials');
 
     const isValidPassword = await compare(password, user.password);
-    if (!isValidPassword) return null;
+    if (!isValidPassword)
+      throw new UnauthorizedException('Invalid credentials');
 
     return user;
   }
 
-  async login(dto: z.infer<typeof LoginSchema>): Promise<TokenResponse> {
-    const user = await this.validateUser(dto.email, dto.password);
+  async login(values: LoginBody): Promise<TokenResponse> {
+    const user = await this.validateUser(values.email, values.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const tokens = await this.getTokens(user.id);
@@ -79,17 +85,22 @@ export class AuthService {
     return { ...tokens, email: user.email };
   }
 
-  async register(dto: z.infer<typeof RegisterSchema>): Promise<TokenResponse> {
-    const user = await this.usersService.create(dto);
+  async register(values: RegisterBody): Promise<TokenResponse> {
+    const [user] = await this.usersService.create({
+      email: values.email,
+      password: await hash(values.password, 10),
+    });
+
+    if (!user) throw new UnauthorizedException('User not found');
+
     const tokens = await this.getTokens(user.id);
 
     return { ...tokens, email: user.email };
   }
 
-  async refreshToken(
-    dto: z.infer<typeof RefreshSchema>,
-  ): Promise<TokenResponse> {
-    const test = jwtDecode(dto.refresh);
+  async refreshToken(values: RefreshBody): Promise<TokenResponse> {
+    const test = jwtDecode(values.refresh);
+
     if (!test.sub || !test.exp)
       throw new UnauthorizedException('Invalid token');
 
@@ -100,7 +111,7 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('User not found');
 
-    const provider = await this.providerService.findByUserId(user.id);
+    const provider = await this.providerService.find({ userId: user.id });
 
     if (provider?.name === 'spotify' && provider.refresh_token) {
       const token = await this.spotifyService.refreshToken(
@@ -118,12 +129,12 @@ export class AuthService {
     return { ...tokens, email: user.email };
   }
 
-  async authenticateSpotify(
-    dto: z.infer<typeof SpotifyAuthSchema>,
-  ): Promise<TokenResponse> {
-    const user = await this.usersService.findByEmail(dto.email);
+  async authenticateSpotify(values: SpotifyAuthBody): Promise<TokenResponse> {
+    const user = await this.usersService.find({
+      email: values.email,
+    });
     const provider = user
-      ? await this.providerService.findByUserId(user.id)
+      ? await this.providerService.find({ userId: user.id })
       : null;
 
     if (user && !provider) {
@@ -131,36 +142,32 @@ export class AuthService {
     }
 
     if (!user) {
-      const newUser = await this.usersService.create({
-        email: dto.email,
+      const [newUser] = await this.usersService.create({
+        email: values.email,
       });
 
+      if (!newUser) throw new UnauthorizedException('User not created');
+
       await this.providerService.create({
-        id: dto.id,
         name: 'spotify',
-        access_token: dto.access_token,
-        refresh_token: dto.refresh_token,
+        access_token: values.access_token,
+        refresh_token: values.refresh_token,
         userId: newUser.id,
+        expiresAt: new Date(Date.now() + ms(ACCESS_TOKEN_EXPIRE_TIME)),
       });
     } else {
       await this.providerService.update(provider!.id, {
-        id: dto.id,
-        access_token: dto.access_token,
-        refresh_token: dto.refresh_token,
+        access_token: values.access_token,
+        refresh_token: values.refresh_token,
+        expiresAt: new Date(Date.now() + ms(ACCESS_TOKEN_EXPIRE_TIME)),
       });
     }
 
-    const newUser = await this.usersService.findByEmail(dto.email);
+    const newUser = await this.usersService.find({ email: values.email });
     if (!newUser) throw new UnauthorizedException('User not found');
 
     const tokens = await this.getTokens(newUser.id);
 
-    return {
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      expires_in: tokens.expires_in,
-      email: newUser.email,
-      provider: 'spotify',
-    };
+    return { ...tokens, email: newUser.email, provider: 'spotify' };
   }
 }

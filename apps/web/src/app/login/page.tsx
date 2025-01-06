@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Card } from "@workspace/ui/components/card";
@@ -12,11 +11,9 @@ import { Alert, AlertTitle } from "@workspace/ui/components/alert";
 import { Input, InputWrapper } from "@workspace/ui/components/input";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { LoginSchema } from "@workspace/dto/auth.dto";
+import { LoginBody, LoginSchema } from "@workspace/request/auth.request";
 
 import SpotifyIcon from "@/components/icon/icon-spotify";
-
-type LoginType = z.infer<typeof LoginSchema>;
 
 const LoginPage = () => {
   const t = useTranslations();
@@ -27,12 +24,12 @@ const LoginPage = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginType>({
+  } = useForm<LoginBody>({
     resolver: zodResolver(LoginSchema),
   });
 
   const { mutate: login, isPending } = useMutation({
-    mutationFn: async (data: LoginType) => {
+    mutationFn: async (data: LoginBody) => {
       const response = await signIn("credentials", {
         email: data.email,
         password: data.password,
@@ -50,7 +47,7 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmit = async (data: LoginType) => login(data);
+  const onSubmit = async (data: LoginBody) => login(data);
 
   return (
     <div className="flex h-full flex-col items-center justify-center">

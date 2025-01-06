@@ -1,9 +1,16 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
+import * as schema from '@/db/db.schema';
+
 export const DRIZZLE = Symbol('drizzle-connection');
-import * as schema from 'db/schema';
+
+import { DrizzleDB } from './types/drizzle';
+
+export type Tx = Parameters<Parameters<DrizzleDB['transaction']>[0]>[0];
+
 @Global()
 @Module({
   providers: [

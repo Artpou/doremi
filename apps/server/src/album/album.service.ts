@@ -1,40 +1,64 @@
-import type { DrizzleDB } from 'src/drizzle/types/drizzle';
+import { Injectable } from '@nestjs/common';
+import { and, eq, InferInsertModel, OneOrMany, SQL } from 'drizzle-orm';
 
-import { Injectable, Inject } from '@nestjs/common';
-import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { albums, reviews, tracks } from 'db/schema';
-import { eq } from 'drizzle-orm';
+import { CrudService } from '@/crud/crud.service';
+import { albums, albumsToArtists } from '@/db/db.schema';
+import { Tx } from '@/drizzle/drizzle.module';
+
+import { AlbumResponse } from './album.schema';
 
 @Injectable()
-export class AlbumService {
-  constructor(@Inject(DRIZZLE) private db: DrizzleDB) {}
+export class AlbumService extends CrudService<typeof albums, AlbumResponse> {
+  protected entity = albums;
 
-  async list() {
-    return await this.db.query.albums.findMany({});
-  }
+  async findMany(params: { id?: number; limit?: number }, tx?: Tx) {
+    const where: SQL[] = [];
 
-  async get(id: number) {
-    return await this.db.query.albums.findFirst({
-      where: eq(albums.id, id),
+    if (params?.id) where.push(eq(albums.id, params.id));
+
+    return await (this.db || tx).query.albums.findMany({
+      columns: { createdAt: false },
+      where: and(...where),
+      limit: params?.limit,
       with: {
-        artists: {
-          with: {
-            artist: true,
-          },
-        },
+        reviews: { columns: { createdAt: false } },
+        tracks: { columns: { createdAt: false } },
+        tags: { with: { tag: { columns: { createdAt: false } } } },
+        artists: { with: { artist: { columns: { createdAt: false } } } },
       },
     });
   }
 
-  async reviews(id: number) {
-    return await this.db.query.reviews.findMany({
-      where: eq(reviews.albumId, id),
-    });
+  async find(params: { id?: number }, tx?: Tx) {
+    const [album] = await this.findMany(params, tx);
+    return album;
   }
 
-  async tracks(id: number) {
-    return await this.db.query.tracks.findMany({
-      where: eq(tracks.albumId, id),
+  async create(
+    values: OneOrMany<
+      InferInsertModel<typeof albums> & { artistIds?: number[] }
+    >,
+    tx?: Tx,
+  ) {
+    values = Array.isArray(values) ? values : [values];
+
+    return this.db.transaction(async (tx2) => {
+      tx = tx || tx2;
+      const albums = await super.create(values, tx);
+
+      albums.forEach(async (album, idx) => {
+        const linkIds = values?.[idx]?.artistIds;
+        if (Array.isArray(linkIds) && linkIds.length === 0) return;
+
+        await tx?.insert(albumsToArtists).values(
+          (Array.isArray(linkIds) ? linkIds : [linkIds]).map((linkId) => ({
+            albumId: album.id,
+            artistId: Number(linkId),
+          })),
+        );
+      });
+
+      return albums;
     });
   }
 }

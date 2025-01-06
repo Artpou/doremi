@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Card } from "@workspace/ui/components/card";
@@ -12,12 +11,10 @@ import { Alert, AlertTitle } from "@workspace/ui/components/alert";
 import { Input, InputWrapper } from "@workspace/ui/components/input";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { RegisterSchema } from "@workspace/dto/auth.dto";
+import { RegisterBody, RegisterSchema } from "@workspace/request/auth.request";
 
 import useAPI from "@/hooks/useAPI";
 import SpotifyIcon from "@/components/icon/icon-spotify";
-
-type RegisterType = z.infer<typeof RegisterSchema>;
 
 const SignupPage = () => {
   const router = useRouter();
@@ -29,12 +26,12 @@ const SignupPage = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<RegisterType>({
+  } = useForm<RegisterBody>({
     resolver: zodResolver(RegisterSchema),
   });
 
   const { mutate: signup, isPending } = useMutation({
-    mutationFn: async (data: RegisterType) => {
+    mutationFn: async (data: RegisterBody) => {
       const { error } = await POST("/auth/register", {
         body: data,
       });
@@ -56,7 +53,7 @@ const SignupPage = () => {
     },
   });
 
-  const onSubmit = (data: RegisterType): void => {
+  const onSubmit = (data: RegisterBody): void => {
     signup(data);
   };
 

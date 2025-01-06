@@ -1,5 +1,3 @@
-import type { AuthenticatedRequest } from 'src/auth/auth';
-
 import {
   Controller,
   Get,
@@ -9,20 +7,35 @@ import {
   Body,
   Param,
   UseGuards,
-  NotFoundException,
   Query,
   Req,
+  NotFoundException,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { CreateReviewSchema } from '@workspace/dto/review.dto';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 
-import { ReviewService } from './review.service';
-import { ReviewResponse, ReviewWithRelationsResponse } from './review.response';
+import {
+  CreateReviewSchema,
+  ListReviewsQuerySchema,
+  type ListReviewsQuery,
+} from '@workspace/request/review.request';
+
+import type { AuthenticatedRequest } from '@/auth/auth';
+import { JwtAuthGuard } from '@/auth/auth.guard';
+
 import { ReviewGuard } from './review.guard';
+import {
+  ReviewResponse,
+  ReviewResponseSchema,
+  SimpleReviewResponse,
+} from './review.schema';
+import { ReviewService } from './review.service';
+
+class ListReviewsQueryDto extends createZodDto(ListReviewsQuerySchema) {}
 
 class CreateReviewDto extends createZodDto(CreateReviewSchema) {}
+
+class ReviewResponseDto extends createZodDto(ReviewResponseSchema) {}
 
 @ApiTags('reviews')
 @Controller('reviews')
@@ -31,69 +44,70 @@ export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
   @Get()
-  @ApiOkResponse({ type: [ReviewWithRelationsResponse] })
-  // @UseInterceptors(CacheInterceptor)
-  // @CacheTTL(ms('10m'))
+  @ApiQuery({ type: ListReviewsQueryDto })
+  @ApiOkResponse({ type: [ReviewResponseDto], description: 'List of reviews' })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('feed') feed: 'trending' | 'friends' | 'you' = 'trending',
-  ): Promise<ReviewWithRelationsResponse[]> {
-    if (feed === 'friends')
-      return await this.reviewService.list({
+    @Query() query: ListReviewsQuery,
+  ): Promise<ReviewResponse[]> {
+    if (query.feed === 'friends')
+      return await this.reviewService.findMany({
         creatorId: -1,
       });
-    if (feed === 'you')
-      return await this.reviewService.list({
+    if (query.feed === 'you')
+      return await this.reviewService.findMany({
         creatorId: req.user.id,
       });
-    return await this.reviewService.list({});
+    return await this.reviewService.findMany({});
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: ReviewResponse })
+  @ApiOkResponse({ type: ReviewResponseDto })
   async get(@Param('id') id: number): Promise<ReviewResponse> {
-    const review = await this.reviewService.get(id);
+    const review = await this.reviewService.findById(id);
     if (!review) throw new NotFoundException('Review not found');
-
     return review;
   }
 
   @Post()
-  @ApiOkResponse({ type: ReviewResponse })
+  @ApiOkResponse({ type: ReviewResponseDto })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() dto: CreateReviewDto,
-  ): Promise<ReviewResponse> {
-    const review = await this.reviewService.create({
-      ...dto,
+    @Body() body: CreateReviewDto,
+  ): Promise<SimpleReviewResponse> {
+    const [response] = await this.reviewService.create({
+      ...body,
       creatorId: req.user.id,
     });
-    if (!review) throw new Error('Review creation failed');
-    return review;
+
+    if (!response) throw new NotFoundException('Review not found');
+    return response;
   }
 
   @Put(':id')
   @UseGuards(ReviewGuard)
-  @ApiOkResponse({ type: ReviewResponse })
+  @ApiOkResponse({ type: ReviewResponseDto })
   async update(
     @Param('id') id: number,
     @Req() req: AuthenticatedRequest,
-    @Body() dto: CreateReviewDto,
-  ): Promise<ReviewResponse> {
-    const review = await this.reviewService.update(id, {
-      ...dto,
+    @Body() body: CreateReviewDto,
+  ): Promise<SimpleReviewResponse> {
+    const [review] = await this.reviewService.update(id, {
+      ...body,
       creatorId: req.user.id,
     });
-    if (!review) throw new Error('Review update failed');
+
+    if (!review) throw new NotFoundException('Review not found');
     return review;
   }
 
   @Delete(':id')
   @UseGuards(ReviewGuard)
-  @ApiOkResponse({ type: ReviewResponse })
-  async delete(@Param('id') id: number): Promise<ReviewResponse> {
-    const review = await this.reviewService.delete(id);
-    if (!review) throw new Error('Review deletion failed');
-    return review;
+  @ApiOkResponse({ type: ReviewResponseDto })
+  async delete(@Param('id') id: number): Promise<SimpleReviewResponse> {
+    const [response] = await this.reviewService.delete(id);
+
+    if (!response) throw new NotFoundException('Review not found');
+    return response;
   }
 }

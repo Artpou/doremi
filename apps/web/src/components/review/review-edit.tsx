@@ -1,26 +1,27 @@
 "use client";
 
-import { Textarea } from "@workspace/ui/components/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { CreateReviewSchema } from "@workspace/request/review.request";
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@workspace/ui/components/card";
-import { Button } from "@workspace/ui/components/button";
-import { useMutation } from "@tanstack/react-query";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { CreateReviewSchema } from "@workspace/dto/review.dto";
-import { useTranslations } from "next-intl";
-
-import { ReviewStars } from "./review-stars";
+import { Textarea } from "@workspace/ui/components/textarea";
 
 import { AlbumDetails, AlbumImage } from "@/components/album/album";
-import { IAlbum, IReview } from "@/types/api";
 import useAPI from "@/hooks/useAPI";
 import { useReviewStore } from "@/store/useReviewStore";
+import { IAlbum, IReview } from "@/types/api";
+
+import { ReviewStars } from "./review-stars";
 
 export type CreateReview = z.infer<typeof CreateReviewSchema>;
 

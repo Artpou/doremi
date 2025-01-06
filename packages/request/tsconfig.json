@@ -1,0 +1,9 @@
+{
+  "extends": "@workspace/config/base/tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "declarationDir": "./dist"
+  },
+  "include": ["src"]
+}

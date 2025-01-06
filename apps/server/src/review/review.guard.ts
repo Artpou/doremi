@@ -1,5 +1,3 @@
-import type { DrizzleDB } from 'src/drizzle/types/drizzle';
-
 import {
   Injectable,
   CanActivate,
@@ -8,10 +6,12 @@ import {
   NotFoundException,
   Inject,
 } from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/auth/auth';
-import { DRIZZLE } from 'src/drizzle/drizzle.module';
-import { reviews } from 'db/schema';
 import { eq } from 'drizzle-orm';
+
+import { AuthenticatedRequest } from '@/auth/auth';
+import { reviews } from '@/db/db.schema';
+import { DRIZZLE } from '@/drizzle/drizzle.module';
+import type { DrizzleDB } from '@/drizzle/types/drizzle';
 
 @Injectable()
 export class ReviewGuard implements CanActivate {

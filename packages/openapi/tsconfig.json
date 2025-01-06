@@ -1,0 +1,4 @@
+{
+  "extends": "@workspace/config/base/tsconfig.base.json",
+  "include": ["src/openapi.ts"]
+}
