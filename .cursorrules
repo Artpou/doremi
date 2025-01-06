@@ -1,0 +1,80 @@
+{
+  "patterns": {
+    "server": {
+      "module": {
+        "files": [
+          "{name}.module.ts",
+          "{name}.controller.ts",
+          "{name}.service.ts",
+          "{name}.schema.ts",
+          "{name}.guard.ts",
+          "@workspace/request/{name}.request.ts"
+        ],
+        "imports": [
+          "type imports",
+          "@nestjs/*",
+          "nestjs-zod",
+          "drizzle-orm/*",
+          "drizzle-zod",
+          "@workspace/*",
+          "@/*",
+          "relative"
+        ]
+      }
+    },
+    "web": {
+      "page": {
+        "files": [
+          "page.tsx",
+          "layout.tsx",
+          "loading.tsx",
+          "error.tsx",
+          "@/components/*.tsx"
+        ],
+        "imports": [
+          "react imports",
+          "next-intl",
+          "lucide-react",
+          "@workspace/request/*",
+          "@workspace/ui/components/*",
+          "@/components/*",
+          "@/hooks/*",
+          "@/utils/*"
+        ]
+      },
+      "component": {
+        "structure": [
+          "imports",
+          "types/interfaces",
+          "component definition",
+          "exports"
+        ]
+      },
+      "ui": {
+        "structure": [
+          "imports",
+          "shadcn component variants",
+          "component definition",
+          "exports"
+        ],
+        "imports": [
+          "react imports",
+          "class-variance-authority",
+          "tailwind-merge",
+          "lucide-react",
+          "relative"
+        ]
+      }
+    },
+    "shared": {
+      "naming": {
+        "components": "PascalCase",
+        "hooks": "camelCase",
+        "utils": "camelCase",
+        "schemas": "PascalCase + Schema",
+        "responses": "PascalCase + Response",
+        "variants": "camelCase + Variants"
+      }
+    }
+  }
+}
